@@ -13,12 +13,16 @@ public class Projectile {
 
     // No-args Constructor
     public Projectile() {
+        //set the default values
         this.mass = 1;
         this.force = 0;
         this.angleInDegrees = 0;
         this.gravityConstant = 9.8;
         //convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(0);
+        this.startX = 0;
+        this.startY = 0;
+        this.currentLocation = new double[2];
     }
 
     // Parameterized Constructor
@@ -26,17 +30,37 @@ public class Projectile {
         this.mass = mass;
         this.force = force;
         this.angleInDegrees = angleInDegrees;
-        this.gravityConstant = 9.8;
         //convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(angleInDegrees);
+
+        // Set the default values
+        this.gravityConstant = 9.8;
+        this.startX = 0;
+        this.startY = 0;
+        this.currentLocation = new double[2];
     }
     public Projectile(double mass, double force, double angleInDegrees, double gravityConstant) {
         this.mass = mass;
         this.force = force;
         this.angleInDegrees = angleInDegrees;
         this.gravityConstant = gravityConstant;
+        // Convert the angleInRadians to radians
+        this.angleInRadians = Math.toRadians(angleInDegrees);
+
+        // Set Default Values
+        this.startX = 0;
+        this.startY = 0;
+    }
+    public Projectile(double mass, double force, double angleInDegrees, double gravityConstant, double startX, double startY) {
+        this.mass = mass;
+        this.force = force;
+        this.angleInDegrees = angleInDegrees;
+        this.gravityConstant = gravityConstant;
         //convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(angleInDegrees);
+        this.startX = startX;
+        this.startY = startY;
+        this.currentLocation = new double[]{startX, startY};
     }
 
     // Getters and Setters
@@ -113,6 +137,7 @@ public class Projectile {
     }
 
     // getter/setter for the position array
+    // Calculates, returns, and sets the current position
     public double[] getCurrentLocation(double seconds) {
         double[] currentLocation = new double[2];
         currentLocation[0] = calculateHorizontalPosition(seconds);
@@ -125,7 +150,15 @@ public class Projectile {
         // return a copy of the array for security
         return currentLocation;
     }
+    // Calculates and sets the current position
+    public void setCurrentLocation(double seconds) {
+        double[] currentLocation = new double[2];
+        currentLocation[0] = calculateHorizontalPosition(seconds);
+        currentLocation[1] = calculateVerticalPosition(seconds);
 
-
+        //set the value of the current location array
+        this.currentLocation[0] = currentLocation[0];
+        this.currentLocation[1] = currentLocation[1];
+    }
 
 }
