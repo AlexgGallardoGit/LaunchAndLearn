@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.util.Arrays;
 
 public abstract class Structure {
