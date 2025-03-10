@@ -1,5 +1,3 @@
-package com.example.lauchandlearn;
-
 public class Wall {
     private double width;
     private double height;

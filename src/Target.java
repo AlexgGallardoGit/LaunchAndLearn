@@ -1,5 +1,3 @@
-package com.example.lauchandlearn;
-
 public class Target {
     private boolean isHit;
     private double width;
