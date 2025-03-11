@@ -152,6 +152,7 @@ public class Projectile {
         // return a copy of the array for security
         return currentLocation;
     }
+
     // Calculates and sets the current position
     public void setCurrentLocation(double seconds) {
         double[] currentLocation = new double[2];
