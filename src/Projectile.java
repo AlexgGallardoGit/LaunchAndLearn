@@ -1,3 +1,5 @@
+//import javafx.scene.shape.QuadCurve;
+
 public class Projectile {
     // Data Attributes
     private double mass;
@@ -160,5 +162,51 @@ public class Projectile {
         this.currentLocation[0] = currentLocation[0];
         this.currentLocation[1] = currentLocation[1];
     }
+
+    /*
+
+    public QuadCurve getTrajectoryParabola(Wall[] walls, QuadCurve[] targets, double deltaTime) {
+    // Initialize the trajectory points
+    double currentX = startX;
+    double currentY = startY;
+
+    double currentVelocityX = calculateHorizontalVelocity();
+    double currentVelocityY = calculateVelocity() * Math.sin(angleInRadians);
+
+    // Loop through the trajectory steps
+    for (double t = 0; t < 10; t += deltaTime) {
+        // Update position based on velocity and gravity
+        currentX += currentVelocityX * deltaTime;
+        currentY += currentVelocityY * deltaTime;
+
+        // Apply gravity to the vertical velocity
+        currentVelocityY += -gravityConstant * deltaTime;
+
+        // Check if the projectile collides with a wall
+        for (Wall wall : walls) {
+            if (wall.isCollision(currentX, currentY)) { // Assuming wall has a method to check collision
+                System.out.println("Projectile hit a wall at position: (" + currentX + ", " + currentY + ")");
+                return new QuadCurve(startX, startY, (startX + currentX) / 2, (startY + currentY) / 2, currentX, currentY);
+            }
+        }
+
+        // Check if the projectile reaches a target
+        for (QuadCurve target : targets) {
+            if (target.getStartX() <= currentX && currentX <= target.getEndX() &&
+                target.getStartY() <= currentY && currentY <= target.getEndY()) {
+                System.out.println("Projectile reached the target at position: (" + currentX + ", " + currentY + ")");
+                return new QuadCurve(startX, startY, (startX + currentX) / 2, (startY + currentY) / 2, currentX, currentY);
+            }
+        }
+    }
+
+    // If no collision or target hit, return a full trajectory parabola
+    return new QuadCurve(
+        startX, startY,
+        startX + currentVelocityX, startY + currentVelocityY,
+        startX + currentVelocityX * 2, startY + currentVelocityY * 2 - 0.5 * gravityConstant * Math.pow(2, 2)
+    );
+}
+     */
 
 }
