@@ -6,25 +6,32 @@ import java.util.Arrays;
 
 public class Environment {
     // Data attributes
-    Player player;
-    Wall[] wall;
-    Target[] target;
-    int gamePaneWidth = 1080;
-    int gamePaneHeight = 720;
-    BorderPane environment;
+    private Player player;
+    private Wall[] wall;
+    private Target[] target;
+    private final int gamePaneWidth;
+    private final int gamePaneHeight;
+    private BorderPane environment;
 
     // Constructor
-    Environment(int numWalls, int numTargets) {
-        player = new Player();
-        wall = new Wall[numWalls];
-        target = new Target[numTargets];
-
+    public Environment(int numWalls, int numTargets, int maxHeightOfStructure, int gamePaneWidth, int gamePaneHeight) {
+        this.gamePaneWidth = gamePaneWidth;
+        this.gamePaneHeight = gamePaneHeight;
+        this.player = new Player();
+        for (int i = 0; i < numWalls; i++) {
+            this.wall[i] = new Wall(maxHeightOfStructure);
+        }
+        for (int i = 0; i < numTargets; i++) {
+            this.target[i] = new Target(maxHeightOfStructure);
+        }
     }
 
-    Environment(Player player, Wall[] wall, Target[] target) {
+    public Environment(Player player, Wall[] wall, Target[] target, int gamePaneWidth, int gamePaneHeight) {
         this.player = player;
         this.wall = Arrays.copyOf(wall, wall.length);
         this.target = Arrays.copyOf(target, target.length);
+        this.gamePaneWidth = gamePaneWidth;
+        this.gamePaneHeight = gamePaneHeight;
     }
 
     // Getters and Setters
@@ -46,6 +53,7 @@ public class Environment {
     public void setTarget(Target[] target) {
         this.target = Arrays.copyOf(target, target.length);
     }
+
 
 
 

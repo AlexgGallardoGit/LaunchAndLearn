@@ -1,4 +1,7 @@
-public class Target {
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
+public class Target extends Structure {
     private boolean isHit;
     private double width;
     private double height;
@@ -36,5 +39,22 @@ public class Target {
 
     public boolean contains(double x, double y) {
         return x >= 0 && x <= width && y >= 0 && y <= height;
+    }
+
+    @Override
+    public Rectangle getStructure(int paneWidth, int paneHeight) {
+        Rectangle target = new Rectangle();
+        target.setWidth(width);
+        target.setHeight(height);
+        target.setX(getLeftXLocation());
+        target.setY(paneHeight - height);
+        if (isHit) {
+            target.setStroke(Color.GREEN);
+        }
+        else {
+            target.setStroke(Color.web(color));
+        }
+        target.setFill(Color.WHITE);
+        return target;
     }
 }

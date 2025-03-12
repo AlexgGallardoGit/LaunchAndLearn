@@ -1,12 +1,16 @@
+import javafx.scene.shape.Rectangle;
+
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public abstract class Structure {
     // Data attributes
-    protected static double[][] occupiedXLocation;
+    protected LinkedList<int[]> occupiedXLocation;
     protected double leftXLocation;
     protected double rightXLocation;
     protected double structureHeight;
-    protected static double maxStrcutureHeight;
+    protected double gamePaneWidth;
+    protected double gamePaneHeight;
 
     // Getters
     public double getLeftXLocation() {
@@ -18,23 +22,30 @@ public abstract class Structure {
     public double getStructureHeight() {
         return structureHeight;
     }
-    public double getMaxStrcutureHeight() {
-        return maxStrcutureHeight;
-    }
-    public double[][] getOccupiedXLocation() {
+    public LinkedList<int[]> getOccupiedXLocation() {
         //create a copy of the array for security
-        return Arrays.copyOf(occupiedXLocation, occupiedXLocation.length);
+        return new LinkedList<>(occupiedXLocation);
+    }
+    public double getGamePaneWidth() {
+        return gamePaneWidth;
+    }
+    public double getGamePaneHeight() {
+        return gamePaneHeight;
     }
 
     // Setter
-    public void setMaxStrcutureHeight(double maxStrcutureHeight) {
-        Structure.maxStrcutureHeight = maxStrcutureHeight;
+    public void setOccupiedXLocation(LinkedList<int[]> occupiedXLocation) {
+        this.occupiedXLocation = new LinkedList<>(occupiedXLocation);
     }
-    public void setOccupiedXLocation(double[][] occupiedXLocation) {
-        Structure.occupiedXLocation = Arrays.copyOf(occupiedXLocation, occupiedXLocation.length);;
+    public void setGamePaneWidth(double gamePaneWidth) {
+        this.gamePaneWidth = gamePaneWidth;
+    }
+    public void setGamePaneHeight(double gamePaneHeight) {
+        this.gamePaneHeight = gamePaneHeight;
     }
 
+
     // Get different color rectangles (will be defined in the subclasses)
-    public abstract Structure getStructure();
+    public abstract Rectangle getStructure(int paneWidth, int paneHeight);
 
 }
