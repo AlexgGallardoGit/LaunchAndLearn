@@ -1,6 +1,7 @@
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 
 import java.util.*;
 
@@ -16,17 +17,21 @@ public class Environment {
     public Environment(int numWalls, int numTargets, int gamePaneWidth, int gamePaneHeight) {
         // Size of the space before and after the structures
         double freeSpaceLeft = 100;
-        double freeSpaceRight = 20;
+        double freeSpaceRight = 0;
+
+        // Initialize the game pane size
+        this.gamePaneWidth = gamePaneWidth;
+        this.gamePaneHeight = gamePaneHeight;
+
+        // Set the size for the motion environment
+        gamePaneWidth = (int) (this.gamePaneWidth * 0.80);
+        gamePaneHeight = (int) (this.gamePaneHeight * 0.80);
 
         // Actual Pane width
         double actualPaneWidth = gamePaneWidth - freeSpaceLeft - freeSpaceRight;
 
         // The Number of free spaces minimum is 10(places for structures)
         int nbOfStructureSlots = Math.max(10, (numWalls + numTargets));
-
-        // Initialize the game pane size
-        this.gamePaneWidth = gamePaneWidth;
-        this.gamePaneHeight = gamePaneHeight;
 
         // Initialize the player attribute
         this.player = new Player();
@@ -56,6 +61,7 @@ public class Environment {
             structureList[i + numTargets + numWalls] = "Blank";
         }
 
+        // Shuffle the array, making sure there are no concurrent target's
         structureList = generateValidStructureOrder(structureList);
 
         // Create all the structures
@@ -168,21 +174,44 @@ public class Environment {
         this.target = Arrays.copyOf(target, target.length);
     }
 
-    public BorderPane getEnvironmentPane() {
-        Pane pane = new Pane();
+    public Pane getStructurePane() {
+        Pane structurePane = new Pane();
 
         // Add the targets to the pane
         for (int i = 0; i < this.target.length; i++) {
-            pane.getChildren().add(target[i].getStructure(gamePaneHeight));
+            structurePane.getChildren().add(target[i].getStructure((int) (gamePaneHeight * 0.80)));
         }
 
         // Add the walls to the pane
         for (int i = 0; i < this.wall.length; i++) {
-            pane.getChildren().add(wall[i].getStructure(gamePaneHeight));
+            structurePane.getChildren().add(wall[i].getStructure((int) (gamePaneHeight * 0.80)));
         }
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(pane);
-        return borderPane;
+        return structurePane;
+    }
+
+    public Pane getProjectilePane(double currentSeconds) {
+        // Define the size of the projectile
+        int projectileRadius = (int) (gamePaneHeight * 0.01);
+
+        Pane projectilePane = getStructurePane();
+
+        Projectile projectile = player.getProjectile();
+
+        // Get the current location of the pane
+        double currentXLocation = projectile.calculateHorizontalPosition(currentSeconds);
+        double currentYLocation = projectile.calculateVerticalPosition(currentSeconds);
+
+
+        // Rearrange the coordinates to match the javafx coordinate system
+        currentYLocation = gamePaneHeight * 0.80 - currentYLocation;
+
+        // Create the projectile as a javaFx
+        Circle projectileCircle = new Circle(currentXLocation, currentYLocation, projectileRadius);
+
+        // Add the projectile to the pane
+        projectilePane.getChildren().add(projectileCircle);
+
+        return projectilePane;
     }
 
 

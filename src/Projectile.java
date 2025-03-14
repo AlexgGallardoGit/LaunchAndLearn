@@ -58,6 +58,7 @@ public class Projectile {
         this.force = force;
         this.angleInDegrees = angleInDegrees;
         this.gravityConstant = gravityConstant;
+
         //convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(angleInDegrees);
         this.startX = startX;
@@ -99,7 +100,7 @@ public class Projectile {
 
     //calculate  vertical acceleration
     public double getVerticalAcceleration() {
-        return -gravityConstant;
+        return (-1) * gravityConstant;
     }
 
     // Calculate the velocity
@@ -130,12 +131,15 @@ public class Projectile {
 
     // Calculate the horizontal position
     public double calculateHorizontalPosition(double seconds) {
+        System.out.println("Horizontal Position: " + (startX + calculateHorizontalVelocity() * seconds));
         return startX + calculateHorizontalVelocity() * seconds;
     }
 
     // Calculate the vertical position
     public double calculateVerticalPosition(double seconds) {
-        return startY +  calculateVelocity() * angleInDegrees * seconds - 1/2 * gravityConstant * Math.pow(seconds, 2);
+        double verticalPosition = startY + calculateVelocity() * Math.sin(angleInRadians) * seconds + (0.5 * getVerticalAcceleration() * seconds * seconds);
+        System.out.println("Vertical Position: " + verticalPosition);
+        return verticalPosition;
     }
 
     // getter/setter for the position array
