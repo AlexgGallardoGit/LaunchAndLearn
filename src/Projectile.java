@@ -36,7 +36,7 @@ public class Projectile {
         this.angleInRadians = Math.toRadians(angleInDegrees);
 
         // Set the default values
-        this.gravityConstant = 9.8;
+        this.gravityConstant = 9.8 * 100;
         this.startX = 0;
         this.startY = 0;
         this.currentLocation = new double[2];
@@ -45,7 +45,8 @@ public class Projectile {
         this.mass = mass;
         this.force = force;
         this.angleInDegrees = angleInDegrees;
-        this.gravityConstant = gravityConstant;
+        // Multiply the constant by 10 to maintain scale
+        this.gravityConstant = 100 * gravityConstant;
         // Convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(angleInDegrees);
 
@@ -57,7 +58,9 @@ public class Projectile {
         this.mass = mass;
         this.force = force;
         this.angleInDegrees = angleInDegrees;
-        this.gravityConstant = gravityConstant;
+
+        // Multiply the constant by 10 to maintain scale
+        this.gravityConstant = 100 * gravityConstant;
 
         //convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(angleInDegrees);

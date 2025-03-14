@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 public class GameApp extends Application {
 
     private Pane currentFrame;
-    private static final double TARGET_FPS = 60;
+    private static final double TARGET_FPS = 120;
     private static final double FRAME_TIME = 1_000_000_000 / TARGET_FPS; // Time per frame in nanoseconds
     public Environment environment;
 
@@ -36,7 +36,7 @@ public class GameApp extends Application {
         environment = new Environment(5, 5,1080, 720);
 
         // Create the projectile class
-        Projectile test = new Projectile(1, 100, 50, 9.80, 40, 30);
+        Projectile test = new Projectile(0.7, 800, 45, 9.80, 40, 30);
 
         Player testPlayer = new Player(test);
 
@@ -46,18 +46,16 @@ public class GameApp extends Application {
     private void startGameLoop() {
         AnimationTimer gameLoop = new AnimationTimer() {
             private long lastUpdate = 0;
-            int i = 0;
+            private long startTime = 0;
             @Override
             public void handle(long now) {
-                if (now - lastUpdate >= FRAME_TIME) {
-                    long timeMillis = now / 1_000_000;
+                if (startTime == 0) startTime = now; // Capture the start time
+                double elapsedTime = (now - startTime) / 1_000_000_000.0; // Elapsed time in seconds
 
-                    Pane newFrame = generatePane(i*6/TARGET_FPS);
-                    currentFrame.getChildren().setAll(newFrame.getChildren());
+                Pane newFrame = generatePane(elapsedTime);
+                currentFrame.getChildren().setAll(newFrame.getChildren());
 
-                    lastUpdate = now;
-                    i++;
-                }
+                lastUpdate = now;
             }
         };
 
