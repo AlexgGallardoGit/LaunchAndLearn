@@ -1,3 +1,4 @@
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -10,9 +11,11 @@ public class Wall extends Structure {
         this.height = 200; // Example default height
     }
 
-    public Wall(double maxStructureHeight) {
-        this.height = Math.random() * maxStructureHeight;
-        this.width = this.height * 2;  // Example proportion
+    public Wall(double maxStructureHeight, double width, double leftXLocation) {
+        this.height = (0.01 + (Math.random() * (1 - 0.01))) * maxStructureHeight;
+        this.width = width;  // Example proportion
+        this.leftXLocation = leftXLocation;
+        this.rightXLocation = leftXLocation + width;
     }
 
     public double getWidth() {
@@ -28,7 +31,7 @@ public class Wall extends Structure {
     }
 
     @Override
-    public Rectangle getStructure(int paneWidth, int paneHeight) {
+    public Group getStructure(int paneHeight) {
         Rectangle wall = new Rectangle();
         wall.setWidth(width);
         wall.setHeight(height);
@@ -36,6 +39,6 @@ public class Wall extends Structure {
         wall.setY(paneHeight - height);
         wall.setStroke(Color.BLACK);
         wall.setFill(Color.WHITE);
-        return wall;
+        return new Group(wall);
     }
 }

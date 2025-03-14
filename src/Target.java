@@ -1,5 +1,9 @@
-import javafx.scene.paint.Color;
+import javafx.scene.Group;
+import javafx.scene.paint.*;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+
+import java.util.LinkedList;
 
 public class Target extends Structure {
     private boolean isHit;
@@ -13,10 +17,52 @@ public class Target extends Structure {
         this.color = "Red"; // Example default color
         this.isHit = false;
     }
+//    public Target(double gamePaneWidth, double gamePaneHeight, double maxStructureHeight) {
+//        this.gamePaneWidth = gamePaneWidth;
+//        this.gamePaneHeight = gamePaneHeight;
+//
+//        this.height = Math.max(Math.random() * maxStructureHeight, MIN_HEIGHT);
+//        this.width = gamePaneWidth/4;
+//        this.color = "red";
+//        this.isHit = false;
+//
+//        // Check if there is enough space before attempting placement
+//        double totalOccupiedWidth = 0;
+//        for (double[] range : this.occupiedXLocation) {
+//            totalOccupiedWidth += (range[1] - range[0]);
+//        }
+//
+//        if (totalOccupiedWidth + width > gamePaneWidth) {
+//            throw new IllegalStateException("Cannot place Target: No available space.");
+//        }
+//
+//        // Randomize X position ensuring no overlap
+//        double leftX;
+//        boolean overlap;
+//        do {
+//            leftX = Math.random() * (gamePaneWidth - width);
+//            overlap = false;
+//            for (double[] range : this.occupiedXLocation) {
+//                if (leftX < range[1] && (leftX + width) > range[0]) {
+//                    overlap = true;
+//                    break;
+//                }
+//            }
+//        } while (overlap);
+//        this.leftXLocation = leftX;
+//        this.rightXLocation = leftX + width;
+//
+//        // Store X position
+//        occupiedXLocation.add(new double[]{this.leftXLocation, this.rightXLocation});
+//
+//        System.out.println("Target constructor");
+//    }
 
-    public Target(double maxStructureHeight) {
-        this.height = Math.random() * maxStructureHeight;
-        this.width = this.height;
+    public Target(double maxStructureHeight, double width, double leftXLocation) {
+        this.height = (0.01 + (Math.random() * (1 - 0.01))) * maxStructureHeight;
+        this.width = width;
+        this.leftXLocation = leftXLocation;
+        this.rightXLocation = leftXLocation + width;
         this.color = "Red";
         this.isHit = false;
     }
@@ -42,19 +88,46 @@ public class Target extends Structure {
     }
 
     @Override
-    public Rectangle getStructure(int paneWidth, int paneHeight) {
+    public Group getStructure(int paneHeight) {
         Rectangle target = new Rectangle();
         target.setWidth(width);
         target.setHeight(height);
         target.setX(getLeftXLocation());
         target.setY(paneHeight - height);
-        if (isHit) {
-            target.setStroke(Color.GREEN);
-        }
-        else {
-            target.setStroke(Color.web(color));
-        }
         target.setFill(Color.WHITE);
-        return target;
+
+        // Set the stroke width (for all sides)
+        target.setStrokeWidth(1);
+
+        // Simulate the 4 sides with a stroke (top uses a special color)
+        if (isHit) {
+            target.setStroke(Color.GREEN); // Hide the default stroke
+        } else {
+            target.setStroke(Paint.valueOf(color));
+        }
+
+        // Add the four sides manually
+        double x = getLeftXLocation();
+        double y = paneHeight - height;
+
+        // Top border - Color changes based on isHit
+//        Line topLine = new Line(x, y, x + width, y);
+//        topLine.setStroke(isHit ? Color.GREEN : Color.web(color));
+
+        // Bottom border - Always black
+        Line bottomLine = new Line(x, y + height, x + width, y + height);
+        bottomLine.setStroke(Color.BLACK);
+
+        // Left border - Always black
+        Line leftLine = new Line(x, y, x, y + height);
+        leftLine.setStroke(Color.BLACK);
+
+        // Right border - Always black
+        Line rightLine = new Line(x + width, y, x + width, y + height);
+        rightLine.setStroke(Color.BLACK);
+
+        // Return a group containing the rectangle and the custom borders
+        return new Group(target, bottomLine, leftLine, rightLine);
     }
+
 }

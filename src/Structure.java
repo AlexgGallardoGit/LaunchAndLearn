@@ -1,3 +1,4 @@
+import javafx.scene.Group;
 import javafx.scene.shape.Rectangle;
 
 import java.util.Arrays;
@@ -5,7 +6,7 @@ import java.util.LinkedList;
 
 public abstract class Structure {
     // Data attributes
-    protected LinkedList<int[]> occupiedXLocation;
+    protected static LinkedList<double[]> occupiedXLocation = new LinkedList<>();
     protected double leftXLocation;
     protected double rightXLocation;
     protected double structureHeight;
@@ -22,7 +23,7 @@ public abstract class Structure {
     public double getStructureHeight() {
         return structureHeight;
     }
-    public LinkedList<int[]> getOccupiedXLocation() {
+    public LinkedList<double[]> getOccupiedXLocation() {
         //create a copy of the array for security
         return new LinkedList<>(occupiedXLocation);
     }
@@ -34,7 +35,7 @@ public abstract class Structure {
     }
 
     // Setter
-    public void setOccupiedXLocation(LinkedList<int[]> occupiedXLocation) {
+    public void setOccupiedXLocation(LinkedList<double[]> occupiedXLocation) {
         this.occupiedXLocation = new LinkedList<>(occupiedXLocation);
     }
     public void setGamePaneWidth(double gamePaneWidth) {
@@ -46,6 +47,6 @@ public abstract class Structure {
 
 
     // Get different color rectangles (will be defined in the subclasses)
-    public abstract Rectangle getStructure(int paneWidth, int paneHeight);
+    public abstract Group getStructure(int paneHeight);
 
 }
