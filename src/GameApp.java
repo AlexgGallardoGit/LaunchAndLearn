@@ -36,7 +36,7 @@ public class GameApp extends Application {
         environment = new Environment(5, 5,1080, 720);
 
         // Create the projectile class
-        Projectile test = new Projectile(0.7, 800, 45, 9.80, 40, 30);
+        Projectile test = new Projectile(0.7, 800, 70, 9.80, 40, 30);
 
         Player testPlayer = new Player(test);
 
@@ -47,18 +47,22 @@ public class GameApp extends Application {
         AnimationTimer gameLoop = new AnimationTimer() {
             private long lastUpdate = 0;
             private long startTime = 0;
+
             @Override
             public void handle(long now) {
                 if (startTime == 0) startTime = now; // Capture the start time
-                double elapsedTime = (now - startTime) / 1_000_000_000.0; // Elapsed time in seconds
 
-                Pane newFrame = generatePane(elapsedTime);
-                currentFrame.getChildren().setAll(newFrame.getChildren());
+                // Ensure we wait for the correct frame time
+                if (now - lastUpdate >= FRAME_TIME) {
+                    double elapsedTime = (now - startTime) / 1_000_000_000.0; // Elapsed time in seconds
 
-                lastUpdate = now;
+                    Pane newFrame = generatePane(elapsedTime);
+                    currentFrame.getChildren().setAll(newFrame.getChildren());
+
+                    lastUpdate = now; // Update the last frame time
+                }
             }
         };
-
         gameLoop.start();
     }
 
