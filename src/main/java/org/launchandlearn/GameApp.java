@@ -21,7 +21,7 @@ public class GameApp extends Application {
     public void start(Stage primaryStage) {
         currentFrame = new Pane();
 
-        // Get screen dimensions
+        // Set screen dimensions
         double screenWidth = 1080;
         double screenHeight = 720;
         Scene scene = new Scene(currentFrame, screenWidth, screenHeight);
