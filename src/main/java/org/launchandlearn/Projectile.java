@@ -2,6 +2,7 @@ package org.launchandlearn;//import javafx.scene.shape.QuadCurve;
 
 public class Projectile {
     // Data Attributes
+    private static final double numberOfPixelsPerMeter = 120;
     private double mass;
     private double force;
     private double angleInRadians;
@@ -19,7 +20,7 @@ public class Projectile {
         this.mass = 1;
         this.force = 0;
         this.angleInDegrees = 0;
-        this.gravityConstant = 9.8;
+        this.gravityConstant = 9.8 * numberOfPixelsPerMeter;
         //convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(0);
         this.startX = 0;
@@ -36,7 +37,7 @@ public class Projectile {
         this.angleInRadians = Math.toRadians(angleInDegrees);
 
         // Set the default values
-        this.gravityConstant = 9.8 * 100;
+        this.gravityConstant = 9.8 * numberOfPixelsPerMeter;
         this.startX = 0;
         this.startY = 0;
         this.currentLocation = new double[2];
@@ -45,8 +46,8 @@ public class Projectile {
         this.mass = mass;
         this.force = force;
         this.angleInDegrees = angleInDegrees;
-        // Multiply the constant by 10 to maintain scale
-        this.gravityConstant = 100 * gravityConstant;
+        // Multiply the constant by numberOfPixelsPerMeter to maintain scale
+        this.gravityConstant = numberOfPixelsPerMeter * gravityConstant;
         // Convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(angleInDegrees);
 
@@ -59,8 +60,8 @@ public class Projectile {
         this.force = force;
         this.angleInDegrees = angleInDegrees;
 
-        // Multiply the constant by 10 to maintain scale
-        this.gravityConstant = 100 * gravityConstant;
+        // Multiply the gravity constant by the number of pixels per meter
+        this.gravityConstant = gravityConstant * numberOfPixelsPerMeter;
 
         //convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(angleInDegrees);

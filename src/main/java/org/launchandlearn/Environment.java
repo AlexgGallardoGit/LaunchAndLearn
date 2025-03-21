@@ -1,6 +1,6 @@
 package org.launchandlearn;
 
-import javafx.scene.layout.Border;
+import javafx.animation.AnimationTimer;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
@@ -9,14 +9,21 @@ import java.util.*;
 
 public class Environment {
     // Data attributes
+    private static final double TARGET_FPS = 120;
+    private static final double FRAME_TIME = 1_000_000_000 / TARGET_FPS; // Time per frame in nanoseconds
     private Player player;
     private Wall[] wall;
     private Target[] target;
     private final int gamePaneWidth;
     private final int gamePaneHeight;
+    private Pane gamePane;
+
 
     // Constructor
     public Environment(int numWalls, int numTargets, int gamePaneWidth, int gamePaneHeight) {
+        // Set the default gamePane Value
+        this.gamePane = new Pane();
+
         // Size of the space before and after the structures
         double freeSpaceLeft = 100;
         double freeSpaceRight = 0;
@@ -83,6 +90,9 @@ public class Environment {
     }
 
     public Environment(Player player, Wall[] wall, Target[] target, int gamePaneWidth, int gamePaneHeight) {
+        // Set the default gamePane Value
+        this.gamePane = new Pane();
+
         this.player = player;
         this.wall = Arrays.copyOf(wall, wall.length);
         this.target = Arrays.copyOf(target, target.length);
@@ -175,6 +185,12 @@ public class Environment {
     public void setTarget(Target[] target) {
         this.target = Arrays.copyOf(target, target.length);
     }
+    public Pane getGamePane() {
+        return gamePane;
+    }
+    public void setGamePane(Pane gamePane) {
+        this.gamePane = gamePane;
+    }
 
     public Pane getStructurePane() {
         Pane structurePane = new Pane();
@@ -199,7 +215,7 @@ public class Environment {
 
         Projectile projectile = player.getProjectile();
 
-        // Get the current location of the pane
+        // Get the current location of the projectile
         double currentXLocation = projectile.calculateHorizontalPosition(currentSeconds);
         double currentYLocation = projectile.calculateVerticalPosition(currentSeconds);
 
@@ -207,7 +223,7 @@ public class Environment {
         // Rearrange the coordinates to match the javafx coordinate system
         currentYLocation = gamePaneHeight * 0.80 - currentYLocation;
 
-        // Create the projectile as a javaFx
+        // Create the projectile as a javaFx circle
         Circle projectileCircle = new Circle(currentXLocation, currentYLocation, projectileRadius);
 
         // Add the projectile to the pane
@@ -216,9 +232,76 @@ public class Environment {
         return projectilePane;
     }
 
+    // get current game state, return (1 = no collision, 2 = hit target, 3 = end of animation)
+//    public int getCurrentGameState(double currentSeconds) {
+//        // Get the current location of the projectile
+//        Projectile projectile = player.getProjectile();
+//        double currentXLocation = projectile.calculateHorizontalPosition(currentSeconds);
+//        double currentYLocation = projectile.calculateVerticalPosition(currentSeconds);
+//
+//        // Check if the projectile is in a wall
+//        for (int i = 0; i < wall.length; i++) {
+//            if (wall[i].contains(currentXLocation, currentYLocation, (gamePaneHeight * 0.80), ((int) (gamePaneHeight * 0.01)))) {
+//                return 3;
+//            }
+//        }
+//
+//        // Check if the projectile is out of bounds
+//        if () {
+//
+//        }
+//
+//        // Check if the projectile has hit a target
+//        for (int i = 0; i < target.length; i++) {
+//            // Check if the ball is inside the target
+//            if (target[i].contains(currentXLocation, currentYLocation, (gamePaneHeight * 0.80), ((int) (gamePaneHeight * 0.01)))) {
+//                // Get the seconds before the collision
+//                double secondsBefore = currentSeconds;
+//                double XLocationBeforeCollision = projectile.calculateHorizontalPosition(secondsBefore);
+//                double YLocationBeforeCollision = projectile.calculateVerticalPosition(secondsBefore);
+//                while (target[i].contains(XLocationBeforeCollision, YLocationBeforeCollision, (gamePaneHeight * 0.80), ((int) (gamePaneHeight * 0.01)))) {
+//                    secondsBefore -= 0.001;
+//                    XLocationBeforeCollision = projectile.calculateHorizontalPosition(secondsBefore);
+//                    YLocationBeforeCollision = projectile.calculateVerticalPosition(secondsBefore);
+//                }
+//
+//                // Check if the ball entered hit the target from above
+//                if (YLocationBeforeCollision <= (gamePaneHeight * 0.80) - target[i].getHeigth()){
+//                    // Set the target to is it
+//                    target[i].setIsHit(true);
+//
+//                    return 2;
+//                }
+//                else {
+//                    return 3;
+//                }
+//            }
+//        }
+//    }
 
 
+    public void startGameLoop() {
+        AnimationTimer gameLoop = new AnimationTimer() {
+            private long lastUpdate = 0;
+            private long startTime = 0;
 
+            @Override
+            public void handle(long now) {
+                if (startTime == 0) startTime = now; // Capture the start time
+
+                // Ensure we wait for the correct frame time
+                if (now - lastUpdate >= FRAME_TIME) {
+                    double elapsedTime = (now - startTime) / 1_000_000_000.0; // Elapsed time in seconds
+
+                    Pane newFrame = getProjectilePane(elapsedTime);
+                    gamePane.getChildren().setAll(newFrame.getChildren());
+
+                    lastUpdate = now; // Update the last frame time
+                }
+            }
+        };
+        gameLoop.start();
+    }
 
 
 }

@@ -19,16 +19,6 @@ public class GameApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        currentFrame = new Pane();
-
-        // Set screen dimensions
-        double screenWidth = 1080;
-        double screenHeight = 720;
-        Scene scene = new Scene(currentFrame, screenWidth, screenHeight);
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
-        startGameLoop();
 
         environment = new Environment(5, 5,1080, 720);
 
@@ -38,29 +28,18 @@ public class GameApp extends Application {
         Player testPlayer = new Player(test);
 
         environment.setPlayer(testPlayer);
-    }
 
-    private void startGameLoop() {
-        AnimationTimer gameLoop = new AnimationTimer() {
-            private long lastUpdate = 0;
-            private long startTime = 0;
 
-            @Override
-            public void handle(long now) {
-                if (startTime == 0) startTime = now; // Capture the start time
+        currentFrame = environment.getGamePane();
 
-                // Ensure we wait for the correct frame time
-                if (now - lastUpdate >= FRAME_TIME) {
-                    double elapsedTime = (now - startTime) / 1_000_000_000.0; // Elapsed time in seconds
+        // Set screen dimensions
+        double screenWidth = 1080;
+        double screenHeight = 720;
+        Scene scene = new Scene(currentFrame, screenWidth, screenHeight);
+        primaryStage.setScene(scene);
 
-                    Pane newFrame = generatePane(elapsedTime);
-                    currentFrame.getChildren().setAll(newFrame.getChildren());
-
-                    lastUpdate = now; // Update the last frame time
-                }
-            }
-        };
-        gameLoop.start();
+        primaryStage.show();
+        environment.startGameLoop();
     }
 
     // Example pane: Moving circle animation
