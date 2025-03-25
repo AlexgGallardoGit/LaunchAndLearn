@@ -8,7 +8,6 @@ import java.util.LinkedList;
 
 public abstract class Structure {
     // Data attributes
-    protected static LinkedList<double[]> occupiedXLocation = new LinkedList<>();
     protected double leftXLocation;
     protected double rightXLocation;
     protected double structureHeight;
@@ -25,10 +24,6 @@ public abstract class Structure {
     public double getStructureHeight() {
         return structureHeight;
     }
-    public LinkedList<double[]> getOccupiedXLocation() {
-        //create a copy of the array for security
-        return new LinkedList<>(occupiedXLocation);
-    }
     public double getGamePaneWidth() {
         return gamePaneWidth;
     }
@@ -37,9 +32,6 @@ public abstract class Structure {
     }
 
     // Setter
-    public void setOccupiedXLocation(LinkedList<double[]> occupiedXLocation) {
-        this.occupiedXLocation = new LinkedList<>(occupiedXLocation);
-    }
     public void setGamePaneWidth(double gamePaneWidth) {
         this.gamePaneWidth = gamePaneWidth;
     }

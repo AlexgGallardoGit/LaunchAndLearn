@@ -28,8 +28,21 @@ public class Wall extends Structure {
         return height;
     }
 
-    public boolean contains(double x, double y) {
-        return x >= 0 && x <= width && y >= 0 && y <= height;
+    public boolean contains(double x, double y, double paneHeight, int ballRadius) {
+        double wallTop = paneHeight - height;
+        double wallBottom = paneHeight;
+        double wallLeft = leftXLocation;
+        double wallRight = rightXLocation;
+
+        double ballLeft = x - ballRadius;
+        double ballRight = x + ballRadius;
+        double ballTop = y - ballRadius;
+        double ballBottom = y + ballRadius;
+
+        return (ballRight >= wallLeft &&
+                ballLeft <= wallRight &&
+                ballBottom >= wallTop &&
+                ballTop <= wallBottom);
     }
 
     @Override

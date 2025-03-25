@@ -2,6 +2,7 @@ package org.launchandlearn;//import javafx.scene.shape.QuadCurve;
 
 public class Projectile {
     // Data Attributes
+    private double numberOfPixelsPerMeter = 120;
     private double mass;
     private double force;
     private double angleInRadians;
@@ -19,7 +20,7 @@ public class Projectile {
         this.mass = 1;
         this.force = 0;
         this.angleInDegrees = 0;
-        this.gravityConstant = 9.8;
+        this.gravityConstant = 9.8 * numberOfPixelsPerMeter;
         //convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(0);
         this.startX = 0;
@@ -36,17 +37,33 @@ public class Projectile {
         this.angleInRadians = Math.toRadians(angleInDegrees);
 
         // Set the default values
-        this.gravityConstant = 9.8 * 100;
+        this.gravityConstant = 9.8 * numberOfPixelsPerMeter;
         this.startX = 0;
         this.startY = 0;
         this.currentLocation = new double[2];
+    }
+    public Projectile(double mass, double force, double angleInDegrees, double gravityConstant,
+                      double startX, double startY, double gamePaneHeight) {
+        this.mass = mass;
+        this.force = force;
+        this.angleInDegrees = angleInDegrees;
+        this.gravityConstant = gravityConstant;
+
+        // Adjust scale dynamically (assuming original reference height is 720)
+        this.numberOfPixelsPerMeter = 120 * (gamePaneHeight / 720.0);
+
+        this.gravityConstant *= this.numberOfPixelsPerMeter;
+        this.angleInRadians = Math.toRadians(angleInDegrees);
+        this.startX = startX;
+        this.startY = startY;
+        this.currentLocation = new double[]{startX, startY};
     }
     public Projectile(double mass, double force, double angleInDegrees, double gravityConstant) {
         this.mass = mass;
         this.force = force;
         this.angleInDegrees = angleInDegrees;
-        // Multiply the constant by 10 to maintain scale
-        this.gravityConstant = 100 * gravityConstant;
+        // Multiply the constant by numberOfPixelsPerMeter to maintain scale
+        this.gravityConstant = numberOfPixelsPerMeter * gravityConstant;
         // Convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(angleInDegrees);
 
@@ -59,8 +76,8 @@ public class Projectile {
         this.force = force;
         this.angleInDegrees = angleInDegrees;
 
-        // Multiply the constant by 10 to maintain scale
-        this.gravityConstant = 100 * gravityConstant;
+        // Multiply the gravity constant by the number of pixels per meter
+        this.gravityConstant = gravityConstant * numberOfPixelsPerMeter;
 
         //convert the angleInRadians to radians
         this.angleInRadians = Math.toRadians(angleInDegrees);
@@ -134,14 +151,14 @@ public class Projectile {
 
     // Calculate the horizontal position
     public double calculateHorizontalPosition(double seconds) {
-        System.out.println("Horizontal Position: " + (startX + calculateHorizontalVelocity() * seconds));
+        //System.out.println("Horizontal Position: " + (startX + calculateHorizontalVelocity() * seconds));
         return startX + calculateHorizontalVelocity() * seconds;
     }
 
     // Calculate the vertical position
     public double calculateVerticalPosition(double seconds) {
         double verticalPosition = startY + calculateVelocity() * Math.sin(angleInRadians) * seconds + (0.5 * getVerticalAcceleration() * seconds * seconds);
-        System.out.println("Vertical Position: " + verticalPosition);
+        //System.out.println("Vertical Position: " + verticalPosition);
         return verticalPosition;
     }
 
