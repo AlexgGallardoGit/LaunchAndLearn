@@ -5,8 +5,6 @@ import javafx.scene.paint.*;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
-import java.util.LinkedList;
-
 public class Target extends Structure {
     private boolean isHit;
     private double width;
@@ -19,46 +17,6 @@ public class Target extends Structure {
         this.color = "Red"; // Example default color
         this.isHit = false;
     }
-//    public Target(double gamePaneWidth, double gamePaneHeight, double maxStructureHeight) {
-//        this.gamePaneWidth = gamePaneWidth;
-//        this.gamePaneHeight = gamePaneHeight;
-//
-//        this.height = Math.max(Math.random() * maxStructureHeight, MIN_HEIGHT);
-//        this.width = gamePaneWidth/4;
-//        this.color = "red";
-//        this.isHit = false;
-//
-//        // Check if there is enough space before attempting placement
-//        double totalOccupiedWidth = 0;
-//        for (double[] range : this.occupiedXLocation) {
-//            totalOccupiedWidth += (range[1] - range[0]);
-//        }
-//
-//        if (totalOccupiedWidth + width > gamePaneWidth) {
-//            throw new IllegalStateException("Cannot place Target: No available space.");
-//        }
-//
-//        // Randomize X position ensuring no overlap
-//        double leftX;
-//        boolean overlap;
-//        do {
-//            leftX = Math.random() * (gamePaneWidth - width);
-//            overlap = false;
-//            for (double[] range : this.occupiedXLocation) {
-//                if (leftX < range[1] && (leftX + width) > range[0]) {
-//                    overlap = true;
-//                    break;
-//                }
-//            }
-//        } while (overlap);
-//        this.leftXLocation = leftX;
-//        this.rightXLocation = leftX + width;
-//
-//        // Store X position
-//        occupiedXLocation.add(new double[]{this.leftXLocation, this.rightXLocation});
-//
-//        System.out.println("Target constructor");
-//    }
 
     public Target(double maxStructureHeight, double width, double leftXLocation) {
         this.height = (0.01 + (Math.random() * (1 - 0.01))) * maxStructureHeight;
@@ -86,10 +44,20 @@ public class Target extends Structure {
     }
 
     public boolean contains(double x, double y, double paneHeight, int ballRadius) {
-        return x >= leftXLocation - ballRadius &&
-                x <= rightXLocation + ballRadius &&
-                y >= paneHeight - height - ballRadius &&
-                y <= paneHeight;
+        double targetTop = paneHeight - height;
+        double targetBottom = paneHeight;
+        double targetLeft = leftXLocation;
+        double targetRight = rightXLocation;
+
+        double ballLeft = x - ballRadius;
+        double ballRight = x + ballRadius;
+        double ballTop = y - ballRadius;
+        double ballBottom = y + ballRadius;
+
+        return (ballRight >= targetLeft &&
+                ballLeft <= targetRight &&
+                ballBottom >= targetTop &&
+                ballTop <= targetBottom);
     }
 
     @Override

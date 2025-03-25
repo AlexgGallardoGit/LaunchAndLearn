@@ -2,7 +2,7 @@ package org.launchandlearn;//import javafx.scene.shape.QuadCurve;
 
 public class Projectile {
     // Data Attributes
-    private static final double numberOfPixelsPerMeter = 120;
+    private double numberOfPixelsPerMeter = 120;
     private double mass;
     private double force;
     private double angleInRadians;
@@ -41,6 +41,22 @@ public class Projectile {
         this.startX = 0;
         this.startY = 0;
         this.currentLocation = new double[2];
+    }
+    public Projectile(double mass, double force, double angleInDegrees, double gravityConstant,
+                      double startX, double startY, double gamePaneHeight) {
+        this.mass = mass;
+        this.force = force;
+        this.angleInDegrees = angleInDegrees;
+        this.gravityConstant = gravityConstant;
+
+        // Adjust scale dynamically (assuming original reference height is 720)
+        this.numberOfPixelsPerMeter = 120 * (gamePaneHeight / 720.0);
+
+        this.gravityConstant *= this.numberOfPixelsPerMeter;
+        this.angleInRadians = Math.toRadians(angleInDegrees);
+        this.startX = startX;
+        this.startY = startY;
+        this.currentLocation = new double[]{startX, startY};
     }
     public Projectile(double mass, double force, double angleInDegrees, double gravityConstant) {
         this.mass = mass;
@@ -135,14 +151,14 @@ public class Projectile {
 
     // Calculate the horizontal position
     public double calculateHorizontalPosition(double seconds) {
-        System.out.println("Horizontal Position: " + (startX + calculateHorizontalVelocity() * seconds));
+        //System.out.println("Horizontal Position: " + (startX + calculateHorizontalVelocity() * seconds));
         return startX + calculateHorizontalVelocity() * seconds;
     }
 
     // Calculate the vertical position
     public double calculateVerticalPosition(double seconds) {
         double verticalPosition = startY + calculateVelocity() * Math.sin(angleInRadians) * seconds + (0.5 * getVerticalAcceleration() * seconds * seconds);
-        System.out.println("Vertical Position: " + verticalPosition);
+        //System.out.println("Vertical Position: " + verticalPosition);
         return verticalPosition;
     }
 

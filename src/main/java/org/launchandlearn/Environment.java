@@ -17,6 +17,7 @@ public class Environment {
     private final int gamePaneWidth;
     private final int gamePaneHeight;
     private Pane gamePane;
+    private int targetsLeft;
 
 
     // Constructor
@@ -35,6 +36,9 @@ public class Environment {
         // Set the size for the motion environment
         gamePaneWidth = (int) (this.gamePaneWidth * 0.80);
         gamePaneHeight = (int) (this.gamePaneHeight * 0.80);
+
+        // Set initialize targets left
+        this.targetsLeft = numTargets;
 
         // Actual Pane width
         double actualPaneWidth = gamePaneWidth - freeSpaceLeft - freeSpaceRight;
@@ -98,6 +102,14 @@ public class Environment {
         this.target = Arrays.copyOf(target, target.length);
         this.gamePaneWidth = gamePaneWidth;
         this.gamePaneHeight = gamePaneHeight;
+
+        // Initialize targetsLeft based on the Target array provided
+        this.targetsLeft = 0;
+        for (Target t : target) {
+            if (!t.getIsHit()) {
+                this.targetsLeft++;
+            }
+        }
     }
 
     // Methode to shuffle structures
@@ -232,76 +244,113 @@ public class Environment {
         return projectilePane;
     }
 
-    // get current game state, return (1 = no collision, 2 = hit target, 3 = end of animation)
-//    public int getCurrentGameState(double currentSeconds) {
-//        // Get the current location of the projectile
-//        Projectile projectile = player.getProjectile();
-//        double currentXLocation = projectile.calculateHorizontalPosition(currentSeconds);
-//        double currentYLocation = projectile.calculateVerticalPosition(currentSeconds);
-//
-//        // Check if the projectile is in a wall
-//        for (int i = 0; i < wall.length; i++) {
-//            if (wall[i].contains(currentXLocation, currentYLocation, (gamePaneHeight * 0.80), ((int) (gamePaneHeight * 0.01)))) {
-//                return 3;
-//            }
-//        }
-//
-//        // Check if the projectile is out of bounds
-//        if () {
-//
-//        }
-//
-//        // Check if the projectile has hit a target
-//        for (int i = 0; i < target.length; i++) {
-//            // Check if the ball is inside the target
-//            if (target[i].contains(currentXLocation, currentYLocation, (gamePaneHeight * 0.80), ((int) (gamePaneHeight * 0.01)))) {
-//                // Get the seconds before the collision
-//                double secondsBefore = currentSeconds;
-//                double XLocationBeforeCollision = projectile.calculateHorizontalPosition(secondsBefore);
-//                double YLocationBeforeCollision = projectile.calculateVerticalPosition(secondsBefore);
-//                while (target[i].contains(XLocationBeforeCollision, YLocationBeforeCollision, (gamePaneHeight * 0.80), ((int) (gamePaneHeight * 0.01)))) {
-//                    secondsBefore -= 0.001;
-//                    XLocationBeforeCollision = projectile.calculateHorizontalPosition(secondsBefore);
-//                    YLocationBeforeCollision = projectile.calculateVerticalPosition(secondsBefore);
-//                }
-//
-//                // Check if the ball entered hit the target from above
-//                if (YLocationBeforeCollision <= (gamePaneHeight * 0.80) - target[i].getHeigth()){
-//                    // Set the target to is it
-//                    target[i].setIsHit(true);
-//
-//                    return 2;
-//                }
-//                else {
-//                    return 3;
-//                }
-//            }
-//        }
-//    }
+    // Get current game state, return (1 = no collision, 2 = hit target, 3 = hit a hit target, 4 = hit target's wall, 5 = hit wall, 6 = Missed)
+    public int getCurrentGameState(double currentSeconds) {
+        Projectile projectile = player.getProjectile();
+        double currentXLocation = projectile.calculateHorizontalPosition(currentSeconds);
+        double currentYLocation = projectile.calculateVerticalPosition(currentSeconds);
+
+        // Y-coordinate for JavaFX coordinate system (invert Y-axis)
+        double correctedYLocation = (gamePaneHeight * 0.80) - currentYLocation;
+        int ballRadius = (int) (gamePaneHeight * 0.01);
+
+        // Wall Collision Check
+        for (int i = 0; i < wall.length; i++) {
+            if (wall[i].contains(currentXLocation, correctedYLocation, (gamePaneHeight * 0.80), ballRadius)) {
+                System.out.println("Collided with wall " + i + "!");
+                return 5;
+            }
+        }
+
+        // Out-of-bounds check: allows projectile to move above the screen
+        if (currentXLocation < 0 || currentXLocation > gamePaneWidth * 0.80 ||
+                correctedYLocation > gamePaneHeight * 0.80) {
+            System.out.println("Missed!");
+            return 6;
+        }
+
+        // Target Collision Check
+        for (int i = 0; i < target.length; i++) {
+            if (target[i].contains(currentXLocation, correctedYLocation, (gamePaneHeight * 0.80), ballRadius)) {
+                double targetTop = (gamePaneHeight * 0.80) - target[i].getHeigth();
+                double ballBottom = correctedYLocation + ballRadius;
+                double ballTop = correctedYLocation - ballRadius;
+                double verticalVelocity = projectile.calculateVerticalVelocity(currentSeconds);
+
+                // Check collision from above and ensure the projectile is moving downward
+                if (ballBottom >= targetTop && ballTop < targetTop && verticalVelocity < 0) {
+                    if (target[i].getIsHit()) {
+                        System.out.println("Hit Target " + i + " that was already hit!");
+                        return 3;
+                    } else {
+                        System.out.println("Hit Target " + i + "!");
+                        target[i].setIsHit(true);
+                        targetsLeft--; // update targetsLeft when a new target is hit
+                        return 2;
+                    }
+                } else {
+                    System.out.println("Collided with Target " + i + "'s wall!");
+                    return 4;
+                }
+            }
+        }
+
+        // No collision
+        return 1;
+    }
+
 
 
     public void startGameLoop() {
         AnimationTimer gameLoop = new AnimationTimer() {
             private long lastUpdate = 0;
             private long startTime = 0;
+            private double previousElapsedTime = 0;
 
             @Override
             public void handle(long now) {
-                if (startTime == 0) startTime = now; // Capture the start time
+                if (startTime == 0) startTime = now;
 
-                // Ensure we wait for the correct frame time
                 if (now - lastUpdate >= FRAME_TIME) {
-                    double elapsedTime = (now - startTime) / 1_000_000_000.0; // Elapsed time in seconds
+                    double elapsedTime = (now - startTime) / 1_000_000_000.0;
 
-                    Pane newFrame = getProjectilePane(elapsedTime);
-                    gamePane.getChildren().setAll(newFrame.getChildren());
+                    boolean collisionDetected = false;
+                    double checkInterval = 0.001; // Small interval for accurate checking
+                    double simulatedTime = previousElapsedTime;
 
-                    lastUpdate = now; // Update the last frame time
+                    // Simulate small steps between last and current frames
+                    while (simulatedTime < elapsedTime) {
+                        simulatedTime += checkInterval;
+
+                        int currentGameState = getCurrentGameState(simulatedTime);
+
+                        // If collision detected
+                        if (currentGameState != 1) {
+                            collisionDetected = true;
+
+                            // Update frame exactly at the collision moment
+                            Pane collisionFrame = getProjectilePane(simulatedTime);
+                            gamePane.getChildren().setAll(collisionFrame.getChildren());
+
+                            this.stop();
+                            break;
+                        }
+                    }
+
+                    // No collision detected, continue normally
+                    if (!collisionDetected) {
+                        Pane newFrame = getProjectilePane(elapsedTime);
+                        gamePane.getChildren().setAll(newFrame.getChildren());
+                    }
+
+                    previousElapsedTime = elapsedTime;
+                    lastUpdate = now;
                 }
             }
         };
         gameLoop.start();
     }
+
 
 
 }

@@ -19,11 +19,14 @@ public class GameApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        // Set screen dimensions
+        int screenWidth = 1080;
+        int screenHeight = 720;
 
-        environment = new Environment(5, 5,1080, 720);
+        environment = new Environment(3, 5, screenWidth, screenHeight);
 
         // Create the projectile class
-        Projectile test = new Projectile(0.7, 800, 70, 9.80, 40, 30);
+        Projectile test = new Projectile(0.7, 1000, 80, 9.80, 40, 30, screenHeight);
 
         Player testPlayer = new Player(test);
 
@@ -32,18 +35,11 @@ public class GameApp extends Application {
 
         currentFrame = environment.getGamePane();
 
-        // Set screen dimensions
-        double screenWidth = 1080;
-        double screenHeight = 720;
+
         Scene scene = new Scene(currentFrame, screenWidth, screenHeight);
         primaryStage.setScene(scene);
 
         primaryStage.show();
         environment.startGameLoop();
-    }
-
-    // Example pane: Moving circle animation
-    private Pane generatePane(double seconds) {
-        return environment.getProjectilePane(seconds);
     }
 }
