@@ -299,8 +299,6 @@ public class Environment {
         return 1;
     }
 
-
-
     public void startGameLoop() {
         AnimationTimer gameLoop = new AnimationTimer() {
             private long lastUpdate = 0;

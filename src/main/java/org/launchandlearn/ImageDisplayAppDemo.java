@@ -27,7 +27,7 @@ public class ImageDisplayAppDemo extends Application {
         startButton.setStyle("-fx-font-size: 22px; -fx-background-color: white; -fx-border-color: black;");
 
 
-// Move the button up
+        // Move the button up
         startButton.setTranslateY(140); // Adjust the value as needed
 
 

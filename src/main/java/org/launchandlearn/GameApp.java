@@ -1,6 +1,5 @@
 package org.launchandlearn;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -23,10 +22,10 @@ public class GameApp extends Application {
         int screenWidth = 1080;
         int screenHeight = 720;
 
-        environment = new Environment(3, 5, screenWidth, screenHeight);
+        environment = new Environment(3, 6, screenWidth, screenHeight);
 
         // Create the projectile class
-        Projectile test = new Projectile(0.7, 1000, 80, 9.80, 40, 30, screenHeight);
+        Projectile test = new Projectile(0.7, 800, 80, 9.80, 40, 30, screenHeight);
 
         Player testPlayer = new Player(test);
 
@@ -41,5 +40,6 @@ public class GameApp extends Application {
 
         primaryStage.show();
         environment.startGameLoop();
+        System.out.println("Game loop started!");
     }
 }
