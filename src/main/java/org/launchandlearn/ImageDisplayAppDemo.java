@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 
 public class ImageDisplayAppDemo extends Application {
     @Override
-
     public void start(Stage primaryStage) {
         // Load the first image
         Image image1 = new Image(getClass().getResource("/images/MainMenu.png").toExternalForm());
@@ -25,11 +24,17 @@ public class ImageDisplayAppDemo extends Application {
         // Create the button
         Button startButton = new Button("Click Here to Start!");
         startButton.setStyle("-fx-font-size: 22px; -fx-background-color: white; -fx-border-color: black;");
+        startButton.setTranslateY(140); // Move the button up
 
-
-        // Move the button up
-        startButton.setTranslateY(140); // Adjust the value as needed
-
+        // Set button action to launch GameAppUserInput
+        startButton.setOnAction(event -> {
+            try {
+                GameAppUserInput gameApp = new GameAppUserInput();
+                gameApp.start(primaryStage); // Reuse the current stage
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         // Create a root pane
         StackPane root1 = new StackPane();
@@ -38,8 +43,6 @@ public class ImageDisplayAppDemo extends Application {
         // Create the scene for the first image
         Scene scene1 = new Scene(root1, javafx.stage.Screen.getPrimary().getBounds().getWidth(),
                 javafx.stage.Screen.getPrimary().getBounds().getHeight());
-
-
 
         // Set up the stage to full screen
         primaryStage.setTitle("Launch and Learn");
