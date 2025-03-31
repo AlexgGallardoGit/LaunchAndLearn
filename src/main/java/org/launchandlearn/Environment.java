@@ -227,9 +227,11 @@ public class Environment {
 
         Projectile projectile = player.getProjectile();
 
-        // Get the current location of the projectile
         double currentXLocation = projectile.calculateHorizontalPosition(currentSeconds);
         double currentYLocation = projectile.calculateVerticalPosition(currentSeconds);
+
+
+
 
 
         // Rearrange the coordinates to match the javafx coordinate system
