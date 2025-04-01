@@ -34,7 +34,7 @@ public class GameAppUserInput extends Application {
         environment = new Environment(3, 5, screenWidth, screenHeight);
 
         // Load the image and style it
-        Image image1 = new Image(getClass().getResource("/images/Standing person.png").toExternalForm());
+        Image image1 = new Image(getClass().getResource("/images/test1figure.png").toExternalForm());
         ImageView imageView1 = new ImageView(image1);
         imageView1.setFitHeight(300); // Adjust as needed
         imageView1.setPreserveRatio(true);
@@ -62,7 +62,7 @@ public class GameAppUserInput extends Application {
             try {
                 double force = Double.parseDouble(forceInput.getText());
                 double angle = Double.parseDouble(angleInput.getText());
-                Projectile test = new Projectile(0.7, force, angle, 9.80, 0, 110, screenHeight);
+                Projectile test = new Projectile(0.7, force, angle, 9.80, -95, 110, screenHeight);
 
 
 
@@ -85,7 +85,7 @@ public class GameAppUserInput extends Application {
 
         //  Set a default projectile so the ball appears
         //Projectile defaultProjectile = new Projectile(0.7, 0, 0, 9.80, 40, 30, screenHeight);
-        Projectile defaultProjectile = new Projectile(0.7, 0, 0, 9.80, 0, 110, screenHeight);
+        Projectile defaultProjectile = new Projectile(0.7, 0, 0, 9.80, -95, 110, screenHeight);
         Player defaultPlayer = new Player(defaultProjectile);
         environment.setPlayer(defaultPlayer);
 

@@ -265,7 +265,8 @@ public class Environment {
         }
 
         // Out-of-bounds check: allows projectile to move above the screen
-        if (currentXLocation < 0 || currentXLocation > gamePaneWidth * 0.80 ||
+        //if (currentXLocation < 0 || currentXLocation > gamePaneWidth * 0.80 ||
+        if (currentXLocation < -100 || currentXLocation > gamePaneWidth * 0.80 ||
                 correctedYLocation > gamePaneHeight * 0.80) {
             System.out.println("Missed!");
             return 6;

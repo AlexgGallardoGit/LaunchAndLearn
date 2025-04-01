@@ -18,7 +18,8 @@ public class Main extends Application {
         Environment environment = new Environment(5, 5,1080, 720);
 
         // Create the projectile class
-        Projectile test = new Projectile(1, 300, 45, 9.80, 40, 30);
+        //Projectile test = new Projectile(1, 300, 45, 9.80, 40, 30);
+        Projectile test = new Projectile(1, 300, 45, 9.80, -95, 110);
 
         Player testPlayer = new Player(test);
 
