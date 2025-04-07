@@ -2,7 +2,7 @@ package org.launchandlearn;//import javafx.scene.shape.QuadCurve;
 
 public class Projectile {
     // Data Attributes
-    private double numberOfPixelsPerMeter = 120;
+    private double numberOfPixelsPerMeter;
     private double mass;
     private double force;
     private double angleInRadians;

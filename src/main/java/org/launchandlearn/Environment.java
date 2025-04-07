@@ -14,14 +14,14 @@ public class Environment {
     private Player player;
     private Wall[] wall;
     private Target[] target;
-    private final int gamePaneWidth;
-    private final int gamePaneHeight;
+    private final double gamePaneWidth;
+    private final double gamePaneHeight;
     private Pane gamePane;
     private int targetsLeft;
 
 
     // Constructor
-    public Environment(int numWalls, int numTargets, int gamePaneWidth, int gamePaneHeight) {
+    public Environment(int numWalls, int numTargets, double gamePaneWidth, double gamePaneHeight) {
         // Set the default gamePane Value
         this.gamePane = new Pane();
 
@@ -351,7 +351,5 @@ public class Environment {
         };
         gameLoop.start();
     }
-
-
 
 }

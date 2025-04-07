@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,8 +29,11 @@ public class GameAppUserInput extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        int screenWidth = 1080;
-        int screenHeight = 720;
+        Screen screen = Screen.getPrimary();
+        //double screenWidth = screen.getBounds().getWidth();
+        //double screenHeight = screen.getBounds().getHeight();
+        double screenWidth = 1080;
+        double screenHeight = 600;
 
         environment = new Environment(3, 5, screenWidth, screenHeight);
 
