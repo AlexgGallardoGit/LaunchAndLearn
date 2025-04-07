@@ -33,7 +33,7 @@ public class GameAppUserInput extends Application {
         //double screenWidth = screen.getBounds().getWidth();
         //double screenHeight = screen.getBounds().getHeight();
         double screenWidth = 1080;
-        double screenHeight = 600;
+        double screenHeight = 720;
 
         environment = new Environment(3, 5, screenWidth, screenHeight);
 
@@ -93,11 +93,11 @@ public class GameAppUserInput extends Application {
         Player defaultPlayer = new Player(defaultProjectile);
         environment.setPlayer(defaultPlayer);
 
-//  Manually draw the ball at t = 0 (no game loop)
+        //  Manually draw the ball at t = 0 (no game loop)
         Pane staticFrame = environment.getProjectilePane(0);
         environment.getGamePane().getChildren().setAll(staticFrame.getChildren());
 
-// Use the gamePane (the one that will be animated later)
+        // Use the gamePane (the one that will be animated later)
         currentFrame = environment.getGamePane();
 
         currentFrame.setStyle("-fx-background-color: #eeeeee;");
