@@ -203,6 +203,12 @@ public class Environment {
     public void setGamePane(Pane gamePane) {
         this.gamePane = gamePane;
     }
+    public int getTargetsLeft() {
+        return targetsLeft;
+    }
+    public void setTargetsLeft(int targetsLeft) {
+        this.targetsLeft = targetsLeft;
+    }
 
     public Pane getStructurePane() {
         Pane structurePane = new Pane();
@@ -210,11 +216,13 @@ public class Environment {
         // Add the targets to the pane
         for (int i = 0; i < this.target.length; i++) {
             structurePane.getChildren().add(target[i].getStructure((int) (gamePaneHeight * 0.80)));
+            //structurePane.getChildren().add(target[i].getStructure((int) gamePaneHeight));
         }
 
         // Add the walls to the pane
         for (int i = 0; i < this.wall.length; i++) {
             structurePane.getChildren().add(wall[i].getStructure((int) (gamePaneHeight * 0.80)));
+            //structurePane.getChildren().add(wall[i].getStructure((int) gamePaneHeight));
         }
         return structurePane;
     }
@@ -288,7 +296,7 @@ public class Environment {
                     } else {
                         System.out.println("Hit Target " + i + "!");
                         target[i].setIsHit(true);
-                        targetsLeft--; // update targetsLeft when a new target is hit
+                        this.targetsLeft--; // update targetsLeft when a new target is hit
                         return 2;
                     }
                 } else {
@@ -351,5 +359,4 @@ public class Environment {
         };
         gameLoop.start();
     }
-
 }
