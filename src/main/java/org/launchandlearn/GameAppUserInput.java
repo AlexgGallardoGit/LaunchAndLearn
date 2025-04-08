@@ -9,12 +9,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 
 public class GameAppUserInput extends Application {
 
@@ -30,8 +30,6 @@ public class GameAppUserInput extends Application {
     @Override
     public void start(Stage primaryStage) {
         Screen screen = Screen.getPrimary();
-        //double screenWidth = screen.getBounds().getWidth();
-        //double screenHeight = screen.getBounds().getHeight();
         double screenWidth = 1080;
         double screenHeight = 720;
 
@@ -43,7 +41,6 @@ public class GameAppUserInput extends Application {
         imageView1.setFitHeight(300); // Adjust as needed
         imageView1.setPreserveRatio(true);
         imageView1.setTranslateY(120); // Lower the image on screen
-
 
         // Put image in a VBox to center it vertically
         VBox imageBox = new VBox(imageView1);
@@ -68,8 +65,6 @@ public class GameAppUserInput extends Application {
                 double angle = Double.parseDouble(angleInput.getText());
                 Projectile test = new Projectile(0.7, force, angle, 9.80, -95, 110, screenHeight);
 
-
-
                 Player testPlayer = new Player(test);
                 environment.setPlayer(testPlayer);
                 environment.startGameLoop();
@@ -86,25 +81,39 @@ public class GameAppUserInput extends Application {
         bottomPane.setCenter(inputBox);
         bottomPane.setStyle("-fx-padding: 15px;");
 
+        // Info panel for displaying mass, acceleration, and formulas
+        VBox infoPanel = new VBox(10);
+        infoPanel.setAlignment(Pos.TOP_LEFT);
+        infoPanel.setStyle("-fx-padding: 10px; -fx-background-color: rgba(244, 244, 244, 0.8); -fx-border-color: #ccc;");
 
-        //  Set a default projectile so the ball appears
-        //Projectile defaultProjectile = new Projectile(0.7, 0, 0, 9.80, 40, 30, screenHeight);
+        // Add labels for mass, acceleration, and formulas
+        Label massLabel = new Label("Mass (m): 0.7 kg");
+        Label accelerationLabel = new Label("Acceleration (g): 9.8 m/s²");
+        Label formulaLabel = new Label("Projectile Motion Formula:");
+        Label rangeFormulaLabel = new Label("Range (R) = (v² * sin(2θ)) / g");
+
+        infoPanel.getChildren().addAll(massLabel, accelerationLabel, formulaLabel, rangeFormulaLabel);
+
+        // Set a default projectile so the ball appears
         Projectile defaultProjectile = new Projectile(0.7, 0, 0, 9.80, -95, 110, screenHeight);
         Player defaultPlayer = new Player(defaultProjectile);
         environment.setPlayer(defaultPlayer);
 
-        //  Manually draw the ball at t = 0 (no game loop)
+        // Manually draw the ball at t = 0 (no game loop)
         Pane staticFrame = environment.getProjectilePane(0);
         environment.getGamePane().getChildren().setAll(staticFrame.getChildren());
 
         // Use the gamePane (the one that will be animated later)
         currentFrame = environment.getGamePane();
-
         currentFrame.setStyle("-fx-background-color: #eeeeee;");
 
-        // Create layout with image on left, game in center
+        // Stack the info panel on top of the image using StackPane
+        StackPane imagePaneWithInfo = new StackPane();
+        imagePaneWithInfo.getChildren().addAll(imageBox, infoPanel);
+
+        // Create layout with the image and info panel on the left, and game in the center
         HBox centerPane = new HBox();
-        centerPane.getChildren().addAll(imageBox, currentFrame);
+        centerPane.getChildren().addAll(imagePaneWithInfo, currentFrame);
 
         BorderPane root = new BorderPane();
         root.setCenter(centerPane);
@@ -114,5 +123,4 @@ public class GameAppUserInput extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
 }
