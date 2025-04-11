@@ -27,8 +27,8 @@ public class GameAppUserInput extends Application {
     @Override
     public void start(Stage primaryStage) {
        // Set screen dimensions
-        //double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        //double screenHeight = Screen.getPrimary().getBounds().getHeight();
+//        double screenWidth = Screen.getPrimary().getBounds().getWidth();
+//        double screenHeight = Screen.getPrimary().getBounds().getHeight();
         int screenWidth = 1080;
         int screenHeight = 720;
 
