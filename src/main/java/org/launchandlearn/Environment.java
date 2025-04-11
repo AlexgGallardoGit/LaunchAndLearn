@@ -42,8 +42,10 @@ public class Environment {
         this.gamePane = new Pane();
 
         // Size of the space before and after the structures
-        double freeSpaceLeft = 100;
+        double freeSpaceLeft = (130 * gamePaneWidth )/ 1080;
         double freeSpaceRight = 0;
+
+        System.out.println(freeSpaceLeft);
 
         // Initialize the game pane size
         this.gamePaneWidth = gamePaneWidth;
@@ -261,10 +263,11 @@ public class Environment {
         }
 
         // Add the player to the pane
-        Image characterImage = new Image(getClass().getResource("/images/test1figure.png").toExternalForm());
+        Image characterImage = new Image(getClass().getResource("/images/standingCharacterImage.png").toExternalForm());
         ImageView characterImageView = new ImageView(characterImage);
-        characterImageView.setFitHeight(100); // Adjust if needed
+        characterImageView.setFitHeight(200); // Adjust if needed
         characterImageView.setPreserveRatio(true);
+        characterImageView.setY(gamePaneHeight * 0.80 - 200);
         structurePane.getChildren().add(characterImageView);
 
         return structurePane;

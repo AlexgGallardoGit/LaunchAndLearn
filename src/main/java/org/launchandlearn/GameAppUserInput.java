@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -27,10 +26,10 @@ public class GameAppUserInput extends Application {
     @Override
     public void start(Stage primaryStage) {
        // Set screen dimensions
-        //double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        //double screenHeight = Screen.getPrimary().getBounds().getHeight();
-        int screenWidth = 1080;
-        int screenHeight = 720;
+        double screenWidth = Screen.getPrimary().getBounds().getWidth();
+        double screenHeight = Screen.getPrimary().getBounds().getHeight();
+        //int screenWidth = 1080;
+        //int screenHeight = 720;
 
         environment = new Environment(3, 5, screenWidth, screenHeight);
         Projectile test1 = new Projectile(0.7, 0, 0, 9.80, 40, 30, screenHeight);
