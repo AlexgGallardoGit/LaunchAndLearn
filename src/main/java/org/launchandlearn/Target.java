@@ -83,10 +83,6 @@ public class Target extends Structure {
         double x = getLeftXLocation();
         double y = paneHeight - height;
 
-        // Top border - Color changes based on isHit
-//        Line topLine = new Line(x, y, x + width, y);
-//        topLine.setStroke(isHit ? Color.GREEN : Color.web(color));
-
         // Bottom border - Always black
         Line bottomLine = new Line(x, y + height, x + width, y + height);
         bottomLine.setStroke(Color.BLACK);

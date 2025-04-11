@@ -55,6 +55,7 @@ public class GameAppUserInput extends Application {
                 startCustomGameLoop();
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input! Please enter numeric values.");
+                System.out.println("Number of targets left: " + environment.getTargetsLeft());
             }
         });
 
