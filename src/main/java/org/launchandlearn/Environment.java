@@ -229,7 +229,7 @@ public class Environment {
     public Pane getStructurePane() {
         Pane structurePane = new Pane();
 
-//        // --- Image Setup ---
+        // --- Image Setup ---
 //        Image image1 = new Image(getClass().getResource("/images/test1figure.png").toExternalForm());
 //        ImageView imageView1 = new ImageView(image1);
 //        imageView1.setFitHeight(270); // Adjust if needed
@@ -243,9 +243,9 @@ public class Environment {
 //        // Shift image left and down
 //        imageBox.setLayoutX(-150);  // Move left (increase negative value if needed)
 //        imageBox.setLayoutY(gamePaneHeight * 0.80 - 233); // Align with "ground"
-//
-//
-//        // Add the image to the pane
+
+
+        // Add the image to the pane
 //        structurePane.getChildren().add(imageBox);
 
         // Add the targets to the pane
@@ -259,6 +259,13 @@ public class Environment {
             structurePane.getChildren().add(wall[i].getStructure((int) (gamePaneHeight * 0.80)));
             //structurePane.getChildren().add(wall[i].getStructure((int) gamePaneHeight));
         }
+
+        // Add the player to the pane
+        Image characterImage = new Image(getClass().getResource("/images/test1figure.png").toExternalForm());
+        ImageView characterImageView = new ImageView(characterImage);
+        characterImageView.setFitHeight(100); // Adjust if needed
+        characterImageView.setPreserveRatio(true);
+        structurePane.getChildren().add(characterImageView);
 
         return structurePane;
     }

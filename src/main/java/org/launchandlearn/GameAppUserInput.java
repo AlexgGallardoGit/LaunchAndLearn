@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class GameAppUserInput extends Application {
@@ -25,10 +26,16 @@ public class GameAppUserInput extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+       // Set screen dimensions
+        //double screenWidth = Screen.getPrimary().getBounds().getWidth();
+        //double screenHeight = Screen.getPrimary().getBounds().getHeight();
         int screenWidth = 1080;
         int screenHeight = 720;
 
         environment = new Environment(3, 5, screenWidth, screenHeight);
+        Projectile test1 = new Projectile(0.7, 0, 0, 9.80, 40, 30, screenHeight);
+        Player testPlayer1 = new Player(test1);
+        environment.setPlayer(testPlayer1);
 
         // Create UI elements for user input
         TextField forceInput = new TextField();
@@ -47,7 +54,7 @@ public class GameAppUserInput extends Application {
             try {
                 double force = Double.parseDouble(forceInput.getText());
                 double angle = Double.parseDouble(angleInput.getText());
-                Projectile test = new Projectile(0.7, force, angle, 9.80, 50, 30, screenHeight);
+                Projectile test = new Projectile(0.7, force, angle, 9.80, 40, 30, screenHeight);
                 Player testPlayer = new Player(test);
                 environment.setPlayer(testPlayer);
 
