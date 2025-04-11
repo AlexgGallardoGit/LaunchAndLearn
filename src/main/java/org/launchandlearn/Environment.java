@@ -5,6 +5,22 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import java.util.*;
 
 public class Environment {
@@ -207,6 +223,25 @@ public class Environment {
     public Pane getStructurePane() {
         Pane structurePane = new Pane();
 
+        // --- Image Setup ---
+        Image image1 = new Image(getClass().getResource("/images/test1figure.png").toExternalForm());
+        ImageView imageView1 = new ImageView(image1);
+        imageView1.setFitHeight(270); // Adjust if needed
+        imageView1.setPreserveRatio(true);
+
+// Position the image lower and farther left
+        VBox imageBox = new VBox(imageView1);
+        imageBox.setAlignment(Pos.BOTTOM_LEFT); // Align to bottom
+        imageBox.setStyle("-fx-background-color: transparent;"); // No background
+
+// Shift image left and down
+        imageBox.setLayoutX(-150);  // Move left (increase negative value if needed)
+        imageBox.setLayoutY(gamePaneHeight * 0.80 - 233); // Align with "ground"
+
+
+        // Add the image to the pane
+        structurePane.getChildren().add(imageBox);
+
         // Add the targets to the pane
         for (int i = 0; i < this.target.length; i++) {
             structurePane.getChildren().add(target[i].getStructure((int) (gamePaneHeight * 0.80)));
@@ -216,8 +251,10 @@ public class Environment {
         for (int i = 0; i < this.wall.length; i++) {
             structurePane.getChildren().add(wall[i].getStructure((int) (gamePaneHeight * 0.80)));
         }
+
         return structurePane;
     }
+
 
     public Pane getProjectilePane(double currentSeconds) {
         // Define the size of the projectile
