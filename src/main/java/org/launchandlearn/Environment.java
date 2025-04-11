@@ -229,24 +229,24 @@ public class Environment {
     public Pane getStructurePane() {
         Pane structurePane = new Pane();
 
-        // --- Image Setup ---
-        Image image1 = new Image(getClass().getResource("/images/test1figure.png").toExternalForm());
-        ImageView imageView1 = new ImageView(image1);
-        imageView1.setFitHeight(270); // Adjust if needed
-        imageView1.setPreserveRatio(true);
-
-// Position the image lower and farther left
-        VBox imageBox = new VBox(imageView1);
-        imageBox.setAlignment(Pos.BOTTOM_LEFT); // Align to bottom
-        imageBox.setStyle("-fx-background-color: transparent;"); // No background
-
-// Shift image left and down
-        imageBox.setLayoutX(-150);  // Move left (increase negative value if needed)
-        imageBox.setLayoutY(gamePaneHeight * 0.80 - 233); // Align with "ground"
-
-
-        // Add the image to the pane
-        structurePane.getChildren().add(imageBox);
+//        // --- Image Setup ---
+//        Image image1 = new Image(getClass().getResource("/images/test1figure.png").toExternalForm());
+//        ImageView imageView1 = new ImageView(image1);
+//        imageView1.setFitHeight(270); // Adjust if needed
+//        imageView1.setPreserveRatio(true);
+//
+//        // Position the image lower and farther left
+//        VBox imageBox = new VBox(imageView1);
+//        imageBox.setAlignment(Pos.BOTTOM_LEFT); // Align to bottom
+//        imageBox.setStyle("-fx-background-color: transparent;"); // No background
+//
+//        // Shift image left and down
+//        imageBox.setLayoutX(-150);  // Move left (increase negative value if needed)
+//        imageBox.setLayoutY(gamePaneHeight * 0.80 - 233); // Align with "ground"
+//
+//
+//        // Add the image to the pane
+//        structurePane.getChildren().add(imageBox);
 
         // Add the targets to the pane
         for (int i = 0; i < this.target.length; i++) {
