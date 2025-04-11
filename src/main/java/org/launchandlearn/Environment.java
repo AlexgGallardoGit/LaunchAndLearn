@@ -22,6 +22,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.*;
+import java.util.List;
+
+import javafx.scene.paint.Color;
 
 public class Environment {
     // Data attributes
@@ -275,6 +278,7 @@ public class Environment {
         // Define the size of the projectile
         int projectileRadius = (int) (gamePaneHeight * 0.01);
 
+        // Start with the structure (background, walls, etc.)
         Pane projectilePane = getStructurePane();
 
         Projectile projectile = player.getProjectile();
@@ -282,18 +286,44 @@ public class Environment {
         double currentXLocation = projectile.calculateHorizontalPosition(currentSeconds);
         double currentYLocation = projectile.calculateVerticalPosition(currentSeconds);
 
-
-
-
-
-        // Rearrange the coordinates to match the javafx coordinate system
+        // Adjust for JavaFX coordinate system
         currentYLocation = gamePaneHeight * 0.80 - currentYLocation;
 
-        // Create the projectile as a javaFx circle
+        // Create the projectile circle
         Circle projectileCircle = new Circle(currentXLocation, currentYLocation, projectileRadius);
+
 
         // Add the projectile to the pane
         projectilePane.getChildren().add(projectileCircle);
+        projectileCircle.setFill(Color.BLACK);
+
+        // --- Create the HUD ---
+        VBox infoHUD = new VBox(10);
+        infoHUD.setAlignment(Pos.TOP_RIGHT);
+
+        // Set position manually (adjust X and Y to your liking)
+        infoHUD.setLayoutX(gamePaneWidth - 200); // Pushes it to the right
+        infoHUD.setLayoutY(20); // Some space from the top
+
+        Label hudTitle = new Label("Projectile Info");
+        hudTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
+        hudTitle.setTextFill(Color.BLACK);
+
+        Label massLabel = new Label("Mass: " + projectile.getMass() + " kg");
+        Label gravityLabel = new Label("Gravity: 9.8 m/s²");
+        Label vxLabel = new Label("Vx: " + String.format("%.2f", projectile.calculateHorizontalVelocity()) + " m/s");
+        Label vyLabel = new Label("Vy: " + String.format("%.2f", projectile.calculateVerticalVelocity(currentSeconds)) + " m/s");
+        Label timeLabel = new Label("Time: " + String.format("%.2f", currentSeconds) + " s");
+
+        for (Label label : List.of(hudTitle, massLabel, gravityLabel, vxLabel, vyLabel, timeLabel)) {
+            label.setTextFill(Color.BLACK);
+        }
+
+        infoHUD.getChildren().addAll(hudTitle, massLabel, gravityLabel, vxLabel, vyLabel, timeLabel);
+
+        // Position the HUD on the right side
+        StackPane.setAlignment(infoHUD, Pos.TOP_RIGHT);
+        projectilePane.getChildren().add(infoHUD);
 
         return projectilePane;
     }
