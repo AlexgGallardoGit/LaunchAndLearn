@@ -12,7 +12,11 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+
+
 public class GameAppUserInput extends Application {
+
+
 
     private Pane currentFrame;
     private static final double TARGET_FPS = 120;
@@ -32,6 +36,11 @@ public class GameAppUserInput extends Application {
         //int screenHeight = 720;
 
         environment = new Environment(3, 5, screenWidth, screenHeight);
+
+
+
+
+
         Projectile test1 = new Projectile(0.7, 0, 0, 9.80, 40, 30, screenHeight);
         Player testPlayer1 = new Player(test1);
         environment.setPlayer(testPlayer1);
@@ -56,6 +65,8 @@ public class GameAppUserInput extends Application {
                 Projectile test = new Projectile(0.7, force, angle, 9.80, 40, 30, screenHeight);
                 Player testPlayer = new Player(test);
                 environment.setPlayer(testPlayer);
+                //
+                environment.incrementTries(); // Count the attempt
 
                 // Start the game only after input is given
                 environment.startGameLoop();

@@ -31,12 +31,30 @@ public class Environment {
     private static final double TARGET_FPS = 120;
     private static final double FRAME_TIME = 1_000_000_000 / TARGET_FPS; // Time per frame in nanoseconds
     private Player player;
+    private int numberOfTries = 0; // Tracks total projectile launches
+
     private Wall[] wall;
     private Target[] target;
     private final double gamePaneWidth;
     private final double gamePaneHeight;
     private Pane gamePane;
     private int targetsLeft;
+//
+    public int getNumberOfTries() {
+        return numberOfTries;
+    }
+    public void incrementTries() {
+        numberOfTries++;
+    }
+   private void showScoreMenu() {
+        Level level = new Level(1); // adjust level as needed
+        char grade = level.getScore(numberOfTries);
+
+        Menu menu = new Menu();
+        Stage stage = (Stage) gamePane.getScene().getWindow();
+        menu.show(stage, String.valueOf(grade));
+    }
+
 
 
     // Constructor
@@ -372,9 +390,18 @@ public class Environment {
                         return 3;
                     } else {
                         System.out.println("Hit Target " + i + "!");
+//                        target[i].setIsHit(true);
+//                        this.targetsLeft--; // update targetsLeft when a new target is hit
+//                        return 2;
                         target[i].setIsHit(true);
-                        this.targetsLeft--; // update targetsLeft when a new target is hit
+                        this.targetsLeft--;
+
+                        if (this.targetsLeft == 0) {
+                            showScoreMenu(); // display score menu when all targets are hit
+                        }
+
                         return 2;
+
                     }
                 } else {
                     System.out.println("Collided with Target " + i + "'s wall!");
