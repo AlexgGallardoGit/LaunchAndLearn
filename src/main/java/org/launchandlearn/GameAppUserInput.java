@@ -30,18 +30,15 @@ public class GameAppUserInput extends Application {
     @Override
     public void start(Stage primaryStage) {
        // Set screen dimensions
-        double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        double screenHeight = Screen.getPrimary().getBounds().getHeight();
-        //int screenWidth = 1080;
-        //int screenHeight = 720;
+        //double screenWidth = Screen.getPrimary().getBounds().getWidth();
+        //double screenHeight = Screen.getPrimary().getBounds().getHeight();
+        int screenWidth = 1080;
+        int screenHeight = 720;
 
         environment = new Environment(3, 5, screenWidth, screenHeight);
 
-
-
-
-
-        Projectile test1 = new Projectile(0.7, 0, 0, 9.80, 40, 30, screenHeight);
+        // Create projectile with initial position at (0,0) - it will be positioned correctly by Environment class
+        Projectile test1 = new Projectile(0.7, 0, 0, 9.80, 0, 0, screenHeight);
         Player testPlayer1 = new Player(test1);
         environment.setPlayer(testPlayer1);
 

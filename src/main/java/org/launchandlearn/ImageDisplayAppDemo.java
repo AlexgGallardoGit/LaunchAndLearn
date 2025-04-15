@@ -98,6 +98,9 @@ public class ImageDisplayAppDemo extends Application {
                 primaryStage.setFullScreenExitHint("");
                 primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
                 primaryStage.setFullScreen(true);
+                // Update the imageView size to match the new window size
+                imageView1.setFitWidth(Screen.getPrimary().getBounds().getWidth());
+                imageView1.setFitHeight(Screen.getPrimary().getBounds().getHeight());
             } else {
                 String[] parts = selected.split("x");
                 int width = Integer.parseInt(parts[0]);
@@ -105,6 +108,9 @@ public class ImageDisplayAppDemo extends Application {
                 primaryStage.setFullScreen(false);
                 primaryStage.setWidth(width);
                 primaryStage.setHeight(height);
+                // Update the imageView size to match the new window size
+                imageView1.setFitWidth(width);
+                imageView1.setFitHeight(height);
             }
         });
 

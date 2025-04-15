@@ -252,25 +252,6 @@ public class Environment {
     public Pane getStructurePane() {
         Pane structurePane = new Pane();
 
-        // --- Image Setup ---
-//        Image image1 = new Image(getClass().getResource("/images/test1figure.png").toExternalForm());
-//        ImageView imageView1 = new ImageView(image1);
-//        imageView1.setFitHeight(270); // Adjust if needed
-//        imageView1.setPreserveRatio(true);
-//
-//        // Position the image lower and farther left
-//        VBox imageBox = new VBox(imageView1);
-//        imageBox.setAlignment(Pos.BOTTOM_LEFT); // Align to bottom
-//        imageBox.setStyle("-fx-background-color: transparent;"); // No background
-//
-//        // Shift image left and down
-//        imageBox.setLayoutX(-150);  // Move left (increase negative value if needed)
-//        imageBox.setLayoutY(gamePaneHeight * 0.80 - 233); // Align with "ground"
-
-
-        // Add the image to the pane
-//        structurePane.getChildren().add(imageBox);
-
         // Add the targets to the pane
         for (int i = 0; i < this.target.length; i++) {
             structurePane.getChildren().add(target[i].getStructure((int) (gamePaneHeight * 0.80)));
@@ -286,10 +267,25 @@ public class Environment {
         // Add the player to the pane
         Image characterImage = new Image(getClass().getResource("/images/standingCharacterImage.png").toExternalForm());
         ImageView characterImageView = new ImageView(characterImage);
-        characterImageView.setFitHeight(200); // Adjust if needed
+        // Set height to 1 meter in pixels
+        double characterHeight = player.getProjectile().getNumberOfPixelsPerMeter();
+        characterImageView.setFitHeight(characterHeight);
         characterImageView.setPreserveRatio(true);
-        characterImageView.setY(gamePaneHeight * 0.80 - 200);
+        
+        // Calculate character width based on preserved ratio
+        double characterWidth = characterHeight * characterImage.getWidth() / characterImage.getHeight();
+        
+        // Position character at the leftmost edge
+        double characterY = gamePaneHeight * 0.80 - characterHeight; // Same level as structures
+        characterImageView.setX(0); // Directly at the left edge
+        characterImageView.setY(characterY);
         structurePane.getChildren().add(characterImageView);
+
+        // Update projectile's starting position to match character's right hand
+        double handX = characterWidth * 0.8; // Right hand position relative to left edge
+        double handY = characterY + (characterHeight * 0.70); // Hand at 70% from top of character
+        player.getProjectile().setStartX(handX);
+        player.getProjectile().setStartY(gamePaneHeight * 0.80 - handY); // Convert to coordinate system used by projectile
 
         return structurePane;
     }
@@ -307,12 +303,12 @@ public class Environment {
         double currentXLocation = projectile.calculateHorizontalPosition(currentSeconds);
         double currentYLocation = projectile.calculateVerticalPosition(currentSeconds);
 
-        // Adjust for JavaFX coordinate system
-        currentYLocation = gamePaneHeight * 0.80 - currentYLocation;
-
-        // Create the projectile circle
-        Circle projectileCircle = new Circle(currentXLocation, currentYLocation, projectileRadius);
-
+        // Create the projectile circle at the starting position or current trajectory position
+        Circle projectileCircle = new Circle(
+            currentXLocation, // Use calculated X position always
+            gamePaneHeight * 0.80 - currentYLocation, // Convert to screen coordinates
+            projectileRadius
+        );
 
         // Add the projectile to the pane
         projectilePane.getChildren().add(projectileCircle);

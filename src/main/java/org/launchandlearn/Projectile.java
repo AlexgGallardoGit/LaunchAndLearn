@@ -116,6 +116,31 @@ public class Projectile {
         this.angleInRadians = angleInRadians;
     }
 
+    // Add getter for numberOfPixelsPerMeter
+    public double getNumberOfPixelsPerMeter() {
+        return numberOfPixelsPerMeter;
+    }
+
+    // Add getter for startX
+    public double getStartX() {
+        return startX;
+    }
+
+    // Add setter for startX
+    public void setStartX(double startX) {
+        this.startX = startX;
+    }
+
+    // Add getter for startY
+    public double getStartY() {
+        return startY;
+    }
+
+    // Add setter for startY
+    public void setStartY(double startY) {
+        this.startY = startY;
+    }
+
     // Physics Projectile Calculations
 
     //calculate  vertical acceleration
