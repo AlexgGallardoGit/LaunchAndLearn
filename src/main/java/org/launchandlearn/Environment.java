@@ -72,8 +72,6 @@ public class Environment {
         double freeSpaceLeft = (130 * gamePaneWidth )/ 1080;
         double freeSpaceRight = 0;
 
-        System.out.println(freeSpaceLeft);
-
         // Initialize the game pane size
         this.gamePaneWidth = gamePaneWidth;
         this.gamePaneHeight = gamePaneHeight;

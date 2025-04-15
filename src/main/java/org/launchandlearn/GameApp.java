@@ -62,6 +62,7 @@ public class GameApp extends Application {
         // Apply dimensions to stage
         primaryStage.setWidth(screenWidth);
         primaryStage.setHeight(screenHeight);
+        primaryStage.setResizable(false);
         startLevel(startLevel);
     }
 

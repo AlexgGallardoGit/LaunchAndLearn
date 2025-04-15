@@ -169,6 +169,9 @@ public class ImageDisplayAppDemo extends Application {
         
         // Display the stage
         primaryStage.show();
+
+        // Lock the primary stage to prevent resizing
+        primaryStage.setResizable(false);
     }
 
     private void updateScreenDimensions(String resolution) {
@@ -199,6 +202,7 @@ public class ImageDisplayAppDemo extends Application {
         stage.setWidth(width);
         stage.setHeight(height);
         updateImageViewSize(imageView);
+        stage.setResizable(false);
     }
 
     private String getCurrentResolutionString() {
