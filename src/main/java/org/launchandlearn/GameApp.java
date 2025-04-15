@@ -9,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class GameApp extends Application {
@@ -94,8 +96,8 @@ public class GameApp extends Application {
         TextField angleInput = new TextField();
         Button launchButton = new Button("Launch");
 
-        forceInput.setPromptText("Enter Force");
-        angleInput.setPromptText("Enter Angle");
+        forceInput.setPromptText("Enter Force (N)");
+        angleInput.setPromptText("Enter Angle (°)");
 
         forceInput.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-padding: 5px;");
         angleInput.setStyle("-fx-font-size: 14px; -fx-pref-width: 120px; -fx-padding: 5px;");
@@ -123,8 +125,18 @@ public class GameApp extends Application {
                 System.out.println("Invalid input! Please enter numeric values.");
             }
         });
+        // Create an Hbox to hold the forceInput
+        Label forceLabel = new Label("N");
+        forceLabel.setFont(Font.font("Arial", 14));
+        HBox forceInputBox = new HBox(1, forceInput, forceLabel);
+        forceInputBox.setAlignment(Pos.CENTER);
 
-        HBox inputBox = new HBox(15, new Label("Force:"), forceInput, new Label("Angle:"), angleInput, launchButton);
+        // Create an Hbox to hold the angleInput
+        Label angleLabel = new Label("°");
+        angleLabel.setFont(Font.font("Arial", 14));
+        HBox angleInputBox = new HBox(1, angleInput, angleLabel);
+
+        HBox inputBox = new HBox(15, new Label("Force:"), forceInputBox, new Label("Angle:"), angleInputBox, launchButton);
         inputBox.setAlignment(Pos.CENTER);
         inputBox.setStyle("-fx-padding: 15px; -fx-background-color: #eeeeee;");
 
