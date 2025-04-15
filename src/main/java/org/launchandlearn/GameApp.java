@@ -9,8 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class GameApp extends Application {
@@ -80,8 +78,14 @@ public class GameApp extends Application {
         // Reset tries counter for new level
         numberOfTrys = 0;
 
+        // Generate a random mas between 0.1 and 1 kg for the projectile
+        double mass = Math.random() * (1 - 0.1) + 0.1;
+
+        // Round the mass to one decimal place
+        mass = Math.round(mass * 10) / 10.0;
+
         // Create projectile with initial position
-        Projectile initialProjectile = new Projectile(0.7, 0, 0, 9.80, 0, 0, screenHeight);
+        Projectile initialProjectile = new Projectile(mass, 0, 0, 9.80, 0, 0, screenHeight);
         Player player = new Player(initialProjectile);
         environment.setPlayer(player);
 
@@ -101,8 +105,9 @@ public class GameApp extends Application {
             try {
                 double force = Double.parseDouble(forceInput.getText());
                 double angle = Double.parseDouble(angleInput.getText());
-                Projectile projectile = new Projectile(0.7, force, angle, 9.80, 0, 0, screenHeight);
-                Player updatedPlayer = new Player(projectile);
+                initialProjectile.setForce(force);
+                initialProjectile.setAngleInDegrees(angle);
+                Player updatedPlayer = new Player(initialProjectile);
                 environment.setPlayer(updatedPlayer);
                 environment.incrementTries();
                 numberOfTrys = environment.getNumberOfTries();
@@ -157,7 +162,7 @@ public class GameApp extends Application {
 
     private void returnToMenu() {
         try {
-            ImageDisplayAppDemo menu = new ImageDisplayAppDemo();
+            MainMenu menu = new MainMenu();
             menu.start(stage);
         } catch (Exception e) {
             e.printStackTrace();

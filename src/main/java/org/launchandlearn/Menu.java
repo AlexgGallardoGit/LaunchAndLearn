@@ -1,6 +1,5 @@
 package org.launchandlearn;
 
-import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,9 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class Menu extends Application {
     private int nextLevel = 1;
@@ -95,7 +92,7 @@ public class Menu extends Application {
 
         exitButton.setOnAction(e -> {
             try {
-                ImageDisplayAppDemo menu = new ImageDisplayAppDemo();
+                MainMenu menu = new MainMenu();
                 // Set the dimensions before starting
                 menu.setWidth(width);
                 menu.setHeight(height);

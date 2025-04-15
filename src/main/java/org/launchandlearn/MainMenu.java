@@ -1,6 +1,5 @@
 package org.launchandlearn;
 
-import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -19,9 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
-public class ImageDisplayAppDemo extends Application {
+public class MainMenu extends Application {
     private double width = Screen.getPrimary().getBounds().getWidth();
     private double height = Screen.getPrimary().getBounds().getHeight();
     private boolean isFullScreen = true;

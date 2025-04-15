@@ -1,22 +1,14 @@
 package org.launchandlearn;
 
 import javafx.animation.AnimationTimer;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-
-import javafx.application.Application;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -353,6 +345,37 @@ public class Environment {
         // Position the HUD on the right side
         StackPane.setAlignment(infoHUD, Pos.TOP_RIGHT);
         projectilePane.getChildren().add(infoHUD);
+
+        // Display the getCurrentGameState info on the structure pane
+        int currentGameState = getCurrentGameState(currentSeconds);
+        switch (currentGameState) {
+            case 1:
+                // No collision detected, continue the game
+                break;
+            case 2:
+                // Hit target
+                projectileCircle.setFill(Color.GREEN);
+                break;
+            case 3:
+                // Hit a hit target
+                projectileCircle.setFill(Color.ORANGE);
+                break;
+            case 4:
+                // Hit target's wall
+                projectileCircle.setFill(Color.RED);
+                break;
+            case 5:
+                // Hit wall
+                projectileCircle.setFill(Color.RED);
+                break;
+            case 6:
+                // Missed
+                projectileCircle.setFill(Color.GRAY);
+                break;
+            default:
+                // Invalid game state
+                break;
+        }
 
         return projectilePane;
     }

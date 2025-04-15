@@ -115,6 +115,9 @@ public class Projectile {
         this.angleInDegrees = Math.toDegrees(angleInRadians);
         this.angleInRadians = angleInRadians;
     }
+    public double getGravityConstant() {
+        return gravityConstant;
+    }
 
     // Add getter for numberOfPixelsPerMeter
     public double getNumberOfPixelsPerMeter() {
