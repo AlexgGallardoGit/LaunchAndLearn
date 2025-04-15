@@ -39,28 +39,34 @@ public class Environment {
     private final double gamePaneHeight;
     private Pane gamePane;
     private int targetsLeft;
-//
+    private Level level;
+
     public int getNumberOfTries() {
         return numberOfTries;
     }
     public void incrementTries() {
         numberOfTries++;
     }
-   private void showScoreMenu() {
-        Level level = new Level(1); // adjust level as needed
+    private void showScoreMenu() {
         char grade = level.getScore(numberOfTries);
-
         Menu menu = new Menu();
         Stage stage = (Stage) gamePane.getScene().getWindow();
-        menu.show(stage, String.valueOf(grade));
+        menu.show(stage, String.valueOf(grade), level.getCurrentLevel() + 1);
     }
 
 
 
-    // Constructor
+    // Constructor with level support
+    public Environment(int numWalls, int numTargets, double gamePaneWidth, double gamePaneHeight, Level level) {
+        this(numWalls, numTargets, gamePaneWidth, gamePaneHeight);
+        this.level = level;
+    }
+
+    // Original constructor for backward compatibility
     public Environment(int numWalls, int numTargets, double gamePaneWidth, double gamePaneHeight) {
         // Set the default gamePane Value
         this.gamePane = new Pane();
+        this.level = new Level(1); // Default to level 1 for backward compatibility
 
         // Size of the space before and after the structures
         double freeSpaceLeft = (130 * gamePaneWidth )/ 1080;
@@ -132,9 +138,17 @@ public class Environment {
         }
     }
 
+    // Constructor with level support for Player, Wall, Target version
+    public Environment(Player player, Wall[] wall, Target[] target, int gamePaneWidth, int gamePaneHeight, Level level) {
+        this(player, wall, target, gamePaneWidth, gamePaneHeight);
+        this.level = level;
+    }
+
+    // Original constructor for Player, Wall, Target version
     public Environment(Player player, Wall[] wall, Target[] target, int gamePaneWidth, int gamePaneHeight) {
         // Set the default gamePane Value
         this.gamePane = new Pane();
+        this.level = new Level(1); // Default to level 1 for backward compatibility
 
         this.player = player;
         this.wall = Arrays.copyOf(wall, wall.length);

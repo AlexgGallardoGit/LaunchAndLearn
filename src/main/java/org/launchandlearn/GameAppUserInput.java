@@ -35,7 +35,7 @@ public class GameAppUserInput extends Application {
         int screenWidth = 1080;
         int screenHeight = 720;
 
-        environment = new Environment(3, 5, screenWidth, screenHeight);
+        environment = new Environment(0, 1, screenWidth, screenHeight);
 
         // Create projectile with initial position at (0,0) - it will be positioned correctly by Environment class
         Projectile test1 = new Projectile(0.7, 0, 0, 9.80, 0, 0, screenHeight);
@@ -59,7 +59,7 @@ public class GameAppUserInput extends Application {
             try {
                 double force = Double.parseDouble(forceInput.getText());
                 double angle = Double.parseDouble(angleInput.getText());
-                Projectile test = new Projectile(0.7, force, angle, 9.80, 40, 30, screenHeight);
+                Projectile test = new Projectile(0.7, force, angle, 9.80, 0, 0, screenHeight);
                 Player testPlayer = new Player(test);
                 environment.setPlayer(testPlayer);
                 //

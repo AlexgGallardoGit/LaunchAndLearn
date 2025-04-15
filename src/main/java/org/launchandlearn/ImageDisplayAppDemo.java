@@ -22,22 +22,45 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class ImageDisplayAppDemo extends Application {
+    private double width = Screen.getPrimary().getBounds().getWidth();
+    private double height = Screen.getPrimary().getBounds().getHeight();
+    private boolean isFullScreen = true;
+
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public void setFullScreen(boolean fullScreen) {
+        this.isFullScreen = fullScreen;
+    }
+
     @Override
     public void start(Stage primaryStage) {
+        // If stage has valid dimensions, use them
+        if (primaryStage.getWidth() > 0 && primaryStage.getHeight() > 0) {
+            width = primaryStage.getWidth();
+            height = primaryStage.getHeight();
+            isFullScreen = primaryStage.isFullScreen();
+        }
+
         // Load the background image
         Image image1 = new Image(getClass().getResource("/images/MainMenu.png").toExternalForm());
         ImageView imageView1 = new ImageView(image1);
         imageView1.setPreserveRatio(true);
-        imageView1.setFitWidth(Screen.getPrimary().getBounds().getWidth());
-        imageView1.setFitHeight(Screen.getPrimary().getBounds().getHeight());
+        updateImageViewSize(imageView1);
 
         // Start button
         Button startButton = new Button("Click Here to Start!");
         startButton.setStyle("-fx-font-size: 22px; -fx-background-color: white; -fx-border-color: black;");
         startButton.setTranslateY(140);
         startButton.setOnAction(event -> {
+            GameApp gameApp = new GameApp();
+            gameApp.setScreenDimensions(width, height, isFullScreen);
             try {
-                GameAppUserInput gameApp = new GameAppUserInput();
                 gameApp.start(primaryStage);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -87,38 +110,27 @@ public class ImageDisplayAppDemo extends Application {
         Label resolutionLabel = new Label("Screen Resolution");
         ComboBox<String> resolutionBox = new ComboBox<>();
         resolutionBox.getItems().addAll("1080x720", "1280x720", "1920x1080", "2560x1440", "Full Screen");
-        resolutionBox.setValue("Full Screen");
+        resolutionBox.setValue(getCurrentResolutionString());
 
         // Optional: Adjust screen resolution when selected
         resolutionBox.setOnAction(e -> {
             String selected = resolutionBox.getValue();
-            if (selected.equals("Full Screen")) {
-                primaryStage.setWidth(Screen.getPrimary().getBounds().getWidth());
-                primaryStage.setHeight(Screen.getPrimary().getBounds().getHeight());
-                primaryStage.setFullScreenExitHint("");
-                primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-                primaryStage.setFullScreen(true);
-                // Update the imageView size to match the new window size
-                imageView1.setFitWidth(Screen.getPrimary().getBounds().getWidth());
-                imageView1.setFitHeight(Screen.getPrimary().getBounds().getHeight());
-            } else {
-                String[] parts = selected.split("x");
-                int width = Integer.parseInt(parts[0]);
-                int height = Integer.parseInt(parts[1]);
-                primaryStage.setFullScreen(false);
-                primaryStage.setWidth(width);
-                primaryStage.setHeight(height);
-                // Update the imageView size to match the new window size
-                imageView1.setFitWidth(width);
-                imageView1.setFitHeight(height);
-            }
+            updateScreenDimensions(selected);
+            applyScreenSettings(primaryStage, imageView1);
+            
+            // Store the new dimensions for other classes to use
+            width = primaryStage.getWidth();
+            height = primaryStage.getHeight();
+            isFullScreen = primaryStage.isFullScreen();
         });
 
         Button closeButton = new Button("Close Settings");
         closeButton.setOnAction(e -> {
             settingsMenu.setVisible(false);
             for (Node node : root1.getChildren()) {
-                node.setEffect(null);
+                if (node != settingsMenu) {
+                    node.setEffect(null);
+                }
             }
         });
 
@@ -133,24 +145,67 @@ public class ImageDisplayAppDemo extends Application {
         root1.getChildren().add(settingsMenu);
         StackPane.setAlignment(settingsMenu, Pos.CENTER);
 
-        // Show settings menu on icon click
+        // Settings icon click handler
         settingsCircle.setOnMouseClicked(event -> {
-            settingsMenu.setVisible(true);
+            settingsMenu.setVisible(!settingsMenu.isVisible());
             for (Node node : root1.getChildren()) {
-                if (node != settingsMenu && node != settingsPane) {
-                    node.setEffect(blur);
+                if (node != settingsMenu) {
+                    node.setEffect(settingsMenu.isVisible() ? blur : null);
                 }
             }
         });
 
-        // Final scene and stage setup
-        Scene scene1 = new Scene(root1, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
-        primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        primaryStage.setFullScreen(true);
-        primaryStage.setTitle("Launch and Learn");
+        // Create scene and configure stage
+        Scene scene1 = new Scene(root1);
         primaryStage.setScene(scene1);
-        primaryStage.setFullScreen(false);
+        primaryStage.setTitle("Launch and Learn");
+        primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        
+        // Apply screen settings and ensure fullscreen is set before showing
+        applyScreenSettings(primaryStage, imageView1);
+        if (isFullScreen) {
+            primaryStage.setFullScreen(true);
+        }
+        
+        // Display the stage
         primaryStage.show();
+    }
+
+    private void updateScreenDimensions(String resolution) {
+        if ("Full Screen".equals(resolution)) {
+            width = Screen.getPrimary().getBounds().getWidth();
+            height = Screen.getPrimary().getBounds().getHeight();
+            isFullScreen = true;
+        } else {
+            String[] parts = resolution.split("x");
+            width = Integer.parseInt(parts[0]);
+            height = Integer.parseInt(parts[1]);
+            isFullScreen = false;
+        }
+    }
+
+    private void updateImageViewSize(ImageView imageView) {
+        if (isFullScreen) {
+            imageView.setFitWidth(Screen.getPrimary().getBounds().getWidth());
+            imageView.setFitHeight(Screen.getPrimary().getBounds().getHeight());
+        } else {
+            imageView.setFitWidth(width);
+            imageView.setFitHeight(height);
+        }
+    }
+
+    private void applyScreenSettings(Stage stage, ImageView imageView) {
+        stage.setFullScreen(false); // Temporarily disable fullscreen
+        stage.setWidth(width);
+        stage.setHeight(height);
+        updateImageViewSize(imageView);
+    }
+
+    private String getCurrentResolutionString() {
+        if (isFullScreen) {
+            return "Full Screen";
+        }
+        return String.format("%.0fx%.0f", width, height);
     }
 
     public static void main(String[] args) {
