@@ -201,6 +201,9 @@ public class MainMenu extends Application {
         stage.setHeight(height);
         updateImageViewSize(imageView);
         stage.setResizable(false);
+        if (isFullScreen) {
+            stage.setFullScreen(true);
+        }
     }
 
     private String getCurrentResolutionString() {

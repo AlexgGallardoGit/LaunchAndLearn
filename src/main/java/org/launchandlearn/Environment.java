@@ -346,6 +346,42 @@ public class Environment {
         StackPane.setAlignment(infoHUD, Pos.TOP_RIGHT);
         projectilePane.getChildren().add(infoHUD);
 
+        // --- Create the Formula Sheet ---
+        VBox formulaSheet = new VBox(5);
+        formulaSheet.setAlignment(Pos.TOP_RIGHT);
+        formulaSheet.setLayoutX(gamePaneWidth - 200);
+        formulaSheet.setLayoutY(200); // Adjust to appear below the HUD
+
+        projectile = player.getProjectile();
+        double velocity = projectile.calculateVelocity();
+        double angle = projectile.getAngleInDegrees();
+        double angleRad = Math.toRadians(angle);
+        double gravity = 9.8; // in m/s²
+
+        // Physics calculations
+        double initialVy = velocity * Math.sin(angleRad);
+        double range = (Math.pow(velocity, 2) * Math.sin(2 * angleRad)) / gravity;
+
+        // Labels for the formula sheet
+        Label formulaTitle = new Label("Formula Sheet");
+        formulaTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
+        formulaTitle.setTextFill(Color.BLACK);
+
+        Label equationLabel = new Label(String.format(
+                "y(t) = y₀ + %.2f*t - 0.5*%.2f*t²", initialVy, gravity));
+
+        Label rangeLabel = new Label(String.format(
+                "Range ≈ %.2f m", range));
+
+        // Set color of all labels
+        for (Label label : List.of(formulaTitle, equationLabel, rangeLabel)) {
+            label.setTextFill(Color.BLACK);
+        }
+
+        formulaSheet.getChildren().addAll(formulaTitle, equationLabel, rangeLabel);
+        projectilePane.getChildren().add(formulaSheet);
+
+
         // Display the getCurrentGameState info on the structure pane
         int currentGameState = getCurrentGameState(currentSeconds);
         switch (currentGameState) {
