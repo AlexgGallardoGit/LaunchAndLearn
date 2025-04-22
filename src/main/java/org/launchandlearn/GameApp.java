@@ -12,11 +12,16 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.scene.Group;
+
 
 public class GameApp extends Application {
     private Level level;
     private int numberOfTrys;
     private Pane currentFrame;
+
+    private Group trajectoryPreview; // stores the preview dots
+
     private static final double TARGET_FPS = 120;
     private static final double FRAME_TIME = 1_000_000_000 / TARGET_FPS;
     public Environment environment;

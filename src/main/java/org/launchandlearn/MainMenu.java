@@ -14,6 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
@@ -38,6 +40,12 @@ public class MainMenu extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        String musicPath = getClass().getResource("/audio/gamesound.mp3").toExternalForm();
+        Media media = new Media(musicPath);
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.play();
+
         // If stage has valid dimensions, use them
         if (primaryStage.getWidth() > 0 && primaryStage.getHeight() > 0) {
             width = primaryStage.getWidth();
