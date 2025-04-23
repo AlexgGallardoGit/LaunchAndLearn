@@ -35,4 +35,8 @@ public class BackgroundMusic {
     public void pause() {
         if (mediaPlayer != null) mediaPlayer.pause();
     }
+
+    public void setVolume(double volume) {
+        if (mediaPlayer != null) mediaPlayer.setVolume(volume);
+    }
 }

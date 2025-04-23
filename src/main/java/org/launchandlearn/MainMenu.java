@@ -25,6 +25,7 @@ public class MainMenu extends Application {
     private double width = Screen.getPrimary().getBounds().getWidth();
     private double height = Screen.getPrimary().getBounds().getHeight();
     private boolean isFullScreen = true;
+    private BackgroundMusic backgroundMusic;
 
     public void setWidth(double width) {
         this.width = width;
@@ -40,11 +41,8 @@ public class MainMenu extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        String musicPath = getClass().getResource("/audio/gamesound.mp3").toExternalForm();
-        Media media = new Media(musicPath);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.play();
+        backgroundMusic = new BackgroundMusic();
+        backgroundMusic.play();
 
         // If stage has valid dimensions, use them
         if (primaryStage.getWidth() > 0 && primaryStage.getHeight() > 0) {
@@ -108,7 +106,10 @@ public class MainMenu extends Application {
 
         // Settings menu controls
         Label musicLabel = new Label("Music Volume");
-        Slider musicSlider = new Slider(0, 100, 50);
+        Slider musicSlider = new Slider(0, 1, 0.5);  
+        musicSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            backgroundMusic.setVolume(newValue.doubleValue());
+        });
 
         Label iconLabel = new Label("Icon Volume");
         Slider iconSlider = new Slider(0, 100, 50);
