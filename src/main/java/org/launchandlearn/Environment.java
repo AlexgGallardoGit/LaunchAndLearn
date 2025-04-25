@@ -24,6 +24,11 @@ public class Environment {
     private static final double FRAME_TIME = 1_000_000_000 / TARGET_FPS; // Time per frame in nanoseconds
     private Player player;
     private int numberOfTries = 0; // Tracks total projectile launches
+    private SoundEffects soundEffects = new SoundEffects();
+
+
+
+
 
     private Wall[] wall;
     private Target[] target;
@@ -430,6 +435,7 @@ public class Environment {
         for (int i = 0; i < wall.length; i++) {
             if (wall[i].contains(currentXLocation, correctedYLocation, (gamePaneHeight * 0.80), ballRadius)) {
                 System.out.println("Collided with wall " + i + "!");
+                soundEffects.playMissSound();
                 return 5;
             }
         }
@@ -439,6 +445,8 @@ public class Environment {
         if (currentXLocation < -100 || currentXLocation > gamePaneWidth * 0.80 ||
                 correctedYLocation > gamePaneHeight * 0.80) {
             System.out.println("Missed!");
+            soundEffects.playMissSound();
+
             return 6;
         }
 
@@ -454,6 +462,8 @@ public class Environment {
                 if (ballBottom >= targetTop && ballTop < targetTop && verticalVelocity < 0) {
                     if (target[i].getIsHit()) {
                         System.out.println("Hit Target " + i + " that was already hit!");
+                        soundEffects.playHitSound();
+
                         return 3;
                     } else {
                         System.out.println("Hit Target " + i + "!");
@@ -462,21 +472,24 @@ public class Environment {
 //                        return 2;
                         target[i].setIsHit(true);
                         this.targetsLeft--;
+                        soundEffects.playHitSound();
 
                         if (this.targetsLeft == 0) {
                             showScoreMenu(); // display score menu when all targets are hit
+
                         }
+                        soundEffects.playHitSound();
 
                         return 2;
 
                     }
                 } else {
                     System.out.println("Collided with Target " + i + "'s wall!");
+                    soundEffects.playMissSound();
                     return 4;
                 }
             }
         }
-
         // No collision
         return 1;
     }
