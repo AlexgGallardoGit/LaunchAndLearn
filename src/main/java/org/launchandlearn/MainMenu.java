@@ -14,6 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
@@ -23,6 +25,7 @@ public class MainMenu extends Application {
     private double width = Screen.getPrimary().getBounds().getWidth();
     private double height = Screen.getPrimary().getBounds().getHeight();
     private boolean isFullScreen = true;
+    private BackgroundMusic backgroundMusic;
 
     public void setWidth(double width) {
         this.width = width;
@@ -38,6 +41,9 @@ public class MainMenu extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        backgroundMusic = new BackgroundMusic();
+        backgroundMusic.play();
+
         // If stage has valid dimensions, use them
         if (primaryStage.getWidth() > 0 && primaryStage.getHeight() > 0) {
             width = primaryStage.getWidth();
@@ -100,7 +106,10 @@ public class MainMenu extends Application {
 
         // Settings menu controls
         Label musicLabel = new Label("Music Volume");
-        Slider musicSlider = new Slider(0, 100, 50);
+        Slider musicSlider = new Slider(0, 1, 0.5);  
+        musicSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            backgroundMusic.setVolume(newValue.doubleValue());
+        });
 
         Label iconLabel = new Label("Icon Volume");
         Slider iconSlider = new Slider(0, 100, 50);
