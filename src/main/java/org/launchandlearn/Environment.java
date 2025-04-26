@@ -323,68 +323,62 @@ public class Environment {
         projectilePane.getChildren().add(projectileCircle);
         projectileCircle.setFill(Color.BLACK);
 
-        // --- Create the HUD ---
-        VBox infoHUD = new VBox(10);
-        infoHUD.setAlignment(Pos.TOP_RIGHT);
+        // --- Polished HUD + Formula Overlay ---
+        double v       = projectile.calculateVelocity();
+        double vx      = projectile.calculateHorizontalVelocity();
+        double vy      = projectile.calculateVerticalVelocity(currentSeconds);
+        double t       = currentSeconds;
+        double θ       = Math.toRadians(projectile.getAngleInDegrees());
+        double initVy  = v * Math.sin(θ);
+        double range   = (v * v * Math.sin(2 * θ)) / 9.8;
 
-        // Set position manually (adjust X and Y to your liking)
-        infoHUD.setLayoutX(gamePaneWidth - 200); // Pushes it to the right
-        infoHUD.setLayoutY(20); // Some space from the top
+        // Labels for Projectile Info
+        Label titleInfo = new Label("Projectile Info");
+        Label massL     = new Label("Mass: "      + projectile.getMass()  + " kg");
+        Label gravL     = new Label("Gravity: 9.8 m/s²");
+        Label vxL       = new Label(String.format("Vx: %.2f m/s", vx));
+        Label vyL       = new Label(String.format("Vy: %.2f m/s", vy));
+        Label timeL     = new Label(String.format("Time: %.2f s", t));
 
-        Label hudTitle = new Label("Projectile Info");
-        hudTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
-        hudTitle.setTextFill(Color.BLACK);
+        // Labels for Formula Sheet
+        Label titleF    = new Label("Formula Sheet");
+        Label eqL       = new Label(String.format("y(t) = y₀ + %.2f*t - 0.5*9.8*t²", initVy));
+        Label rangeL    = new Label(String.format("Range ≈ %.2f m", range));
 
-        Label massLabel = new Label("Mass: " + projectile.getMass() + " kg");
-        Label gravityLabel = new Label("Gravity: 9.8 m/s²");
-        Label vxLabel = new Label("Vx: " + String.format("%.2f", projectile.calculateHorizontalVelocity()) + " m/s");
-        Label vyLabel = new Label("Vy: " + String.format("%.2f", projectile.calculateVerticalVelocity(currentSeconds)) + " m/s");
-        Label timeLabel = new Label("Time: " + String.format("%.2f", currentSeconds) + " s");
+        // Apply styles
+        String titleStyle = "-fx-font-weight: bold; -fx-font-size: 20px; -fx-text-fill: #333;";
+        String valueStyle = "-fx-font-size: 16px; -fx-text-fill: #222;";
+        titleInfo.setStyle(titleStyle); massL.setStyle(valueStyle);
+        gravL.setStyle(valueStyle);    vxL.setStyle(valueStyle);
+        vyL.setStyle(valueStyle);      timeL.setStyle(valueStyle);
+        titleF.setStyle(titleStyle);   eqL.setStyle(valueStyle);
+        rangeL.setStyle(valueStyle);
 
-        for (Label label : List.of(hudTitle, massLabel, gravityLabel, vxLabel, vyLabel, timeLabel)) {
-            label.setTextFill(Color.BLACK);
-        }
+        // Create two “cards”
+        VBox infoCard = new VBox(8, titleInfo, massL, gravL, vxL, vyL, timeL);
+        infoCard.setAlignment(Pos.TOP_LEFT);
+        infoCard.setStyle(
+                "-fx-background-color: rgba(200,230,255,0.9);" +
+                        "-fx-background-radius: 8px;" +
+                        "-fx-padding: 10px;"
+        );
 
-        infoHUD.getChildren().addAll(hudTitle, massLabel, gravityLabel, vxLabel, vyLabel, timeLabel);
+        VBox formulaCard = new VBox(6, titleF, eqL, rangeL);
+        formulaCard.setAlignment(Pos.TOP_LEFT);
+        formulaCard.setStyle(
+                "-fx-background-color: rgba(255,240,210,0.9);" +
+                        "-fx-background-radius: 8px;" +
+                        "-fx-padding: 10px;"
+        );
 
-        // Position the HUD on the right side
-        StackPane.setAlignment(infoHUD, Pos.TOP_RIGHT);
-        projectilePane.getChildren().add(infoHUD);
+        // Stack them in a single overlay
+        VBox overlay = new VBox(12, infoCard, formulaCard);
+        overlay.setAlignment(Pos.TOP_RIGHT);
+        overlay.setLayoutX(gamePaneWidth - 250);  // tweak horizontally
+        overlay.setLayoutY(20);                   // tweak vertically
 
-        // --- Create the Formula Sheet ---
-        VBox formulaSheet = new VBox(5);
-        formulaSheet.setAlignment(Pos.TOP_RIGHT);
-        formulaSheet.setLayoutX(gamePaneWidth - 200);
-        formulaSheet.setLayoutY(200); // Adjust to appear below the HUD
+        projectilePane.getChildren().add(overlay);
 
-        projectile = player.getProjectile();
-        double velocity = projectile.calculateVelocity();
-        double angle = projectile.getAngleInDegrees();
-        double angleRad = Math.toRadians(angle);
-        double gravity = 9.8; // in m/s²
-
-        // Physics calculations
-        double initialVy = velocity * Math.sin(angleRad);
-        double range = (Math.pow(velocity, 2) * Math.sin(2 * angleRad)) / gravity;
-
-        // Labels for the formula sheet
-        Label formulaTitle = new Label("Formula Sheet");
-        formulaTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
-        formulaTitle.setTextFill(Color.BLACK);
-
-        Label equationLabel = new Label(String.format(
-                "y(t) = y₀ + %.2f*t - 0.5*%.2f*t²", initialVy, gravity));
-
-        Label rangeLabel = new Label(String.format(
-                "Range ≈ %.2f m", range));
-
-        // Set color of all labels
-        for (Label label : List.of(formulaTitle, equationLabel, rangeLabel)) {
-            label.setTextFill(Color.BLACK);
-        }
-
-        formulaSheet.getChildren().addAll(formulaTitle, equationLabel, rangeLabel);
-        projectilePane.getChildren().add(formulaSheet);
 
 
         // Display the getCurrentGameState info on the structure pane
