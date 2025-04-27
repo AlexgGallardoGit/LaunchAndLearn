@@ -176,6 +176,18 @@ public class MainMenu extends Application {
             }
         });
 
+        // --- Exit Button ---
+        Button exitButton = new Button("Exit");
+        exitButton.setStyle("-fx-font-size: 18px; -fx-background-color: #ff5555; -fx-text-fill: white; -fx-border-color: black;");
+        exitButton.setOnAction(e -> System.exit(0));
+
+        // Position exit button bottom right
+        StackPane.setAlignment(exitButton, Pos.BOTTOM_RIGHT);
+        exitButton.setTranslateX(-20); // Padding from right
+        exitButton.setTranslateY(-20); // Padding from bottom
+
+        root1.getChildren().add(exitButton);
+
         // Create scene and configure stage
         Scene scene1 = new Scene(root1);
         primaryStage.setScene(scene1);
