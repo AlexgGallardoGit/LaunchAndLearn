@@ -93,11 +93,12 @@ public class Menu extends Application {
         exitButton.setOnAction(e -> {
             try {
                 MainMenu menu = new MainMenu();
-                // Set the dimensions before starting
                 menu.setWidth(width);
                 menu.setHeight(height);
                 menu.setFullScreen(isFullScreen);
+                menu.setStartLevel(nextLevel);
                 menu.start(stage);
+                return;
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

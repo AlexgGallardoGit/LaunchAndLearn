@@ -1,4 +1,4 @@
-package org.launchandlearn;//import javafx.scene.shape.QuadCurve;
+package org.launchandlearn;
 
 public class Projectile {
     // Data Attributes
@@ -43,14 +43,14 @@ public class Projectile {
         this.currentLocation = new double[2];
     }
     public Projectile(double mass, double force, double angleInDegrees, double gravityConstant,
-                      double startX, double startY, double gamePaneHeight) {
+                      double startX, double startY, double gamePaneWidth) {
+        // Adjust scale dynamically (assuming original reference height is 720)
+        this.numberOfPixelsPerMeter = 120 * (gamePaneWidth / 1080);
+
         this.mass = mass;
         this.force = force;
         this.angleInDegrees = angleInDegrees;
         this.gravityConstant = gravityConstant;
-
-        // Adjust scale dynamically (assuming original reference height is 720)
-        this.numberOfPixelsPerMeter = 120 * (gamePaneHeight / 720.0);
 
         this.gravityConstant *= this.numberOfPixelsPerMeter;
         this.angleInRadians = Math.toRadians(angleInDegrees);
@@ -147,30 +147,27 @@ public class Projectile {
     // Physics Projectile Calculations
 
     //calculate  vertical acceleration
-    public double getVerticalAcceleration() {
+    public double getVerticalAccelerationInPixels() {
         return (-1) * gravityConstant;
     }
 
     // Calculate the velocity
     public double calculateVelocity() {
-        // Calculate the velocity V = F/m
-        return force / mass;
+        // Velocity after 1 second of force application: v = F/m (t=1s)
+        // Convert to pixels/second for the game
+        return (force / mass) * numberOfPixelsPerMeter;
     }
     public double calculateHorizontalVelocity() {
         // Calculate the horizontal velocity based on Vx = velocity * cos(angleInRadians)
         double horizontalVelocity = calculateVelocity() * Math.cos(angleInRadians);
-
-        // Update the variable and return the value
         this.horizontalVelocity = horizontalVelocity;
         return horizontalVelocity;
     }
     public double calculateVerticalVelocity(double seconds) {
         // Calculate the initial y velocity(Vy = V * angleInRadians)
         double initialVerticalVelocity = calculateVelocity() * Math.sin(angleInRadians);
-
         // Calculate the vertical velocity at the desired seconds
-        double verticalVelocity = initialVerticalVelocity + getVerticalAcceleration() * seconds;
-
+        double verticalVelocity = initialVerticalVelocity + getVerticalAccelerationInPixels() * seconds;
         this.verticalVelocity = verticalVelocity;
         return verticalVelocity;
     }
@@ -179,14 +176,12 @@ public class Projectile {
 
     // Calculate the horizontal position
     public double calculateHorizontalPosition(double seconds) {
-        //System.out.println("Horizontal Position: " + (startX + calculateHorizontalVelocity() * seconds));
         return startX + calculateHorizontalVelocity() * seconds;
     }
 
     // Calculate the vertical position
     public double calculateVerticalPosition(double seconds) {
-        double verticalPosition = startY + calculateVelocity() * Math.sin(angleInRadians) * seconds + (0.5 * getVerticalAcceleration() * seconds * seconds);
-        //System.out.println("Vertical Position: " + verticalPosition);
+        double verticalPosition = startY + calculateVelocity() * Math.sin(angleInRadians) * seconds + (0.5 * getVerticalAccelerationInPixels() * seconds * seconds);
         return verticalPosition;
     }
 

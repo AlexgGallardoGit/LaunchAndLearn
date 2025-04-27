@@ -26,13 +26,13 @@ public class Main extends Application {
         environment.setPlayer(testPlayer);
 
 
-        Pane pane = environment.getProjectilePane(2.7);
+        //Pane pane = environment.getProjectilePane(2.7);
 
         // Create a scene and place it in the stage
-        Scene scene = new Scene(pane, 1080, 720);
+        //Scene scene = new Scene(pane, 1080, 720);
 
         stage.setTitle("RandomStructures"); // Set the stage title
-        stage.setScene(scene);    // Place the scene in the stage
+        //stage.setScene(scene);    // Place the scene in the stage
 
         stage.show();            // Display the stage
     }

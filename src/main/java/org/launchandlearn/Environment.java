@@ -1,6 +1,7 @@
 package org.launchandlearn;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.geometry.Pos;
@@ -26,10 +27,7 @@ public class Environment {
     private int numberOfTries = 0; // Tracks total projectile launches
     private SoundEffects soundEffects = new SoundEffects();
 
-
-
-
-
+    // Data attributes for the game environment
     private Wall[] wall;
     private Target[] target;
     private final double gamePaneWidth;
@@ -37,6 +35,7 @@ public class Environment {
     private Pane gamePane;
     private int targetsLeft;
     private Level level;
+    private int currentGameState = 0;
 
     public int getNumberOfTries() {
         return numberOfTries;
@@ -280,10 +279,10 @@ public class Environment {
         double characterHeight = player.getProjectile().getNumberOfPixelsPerMeter();
         characterImageView.setFitHeight(characterHeight);
         characterImageView.setPreserveRatio(true);
-        
+
         // Calculate character width based on preserved ratio
         double characterWidth = characterHeight * characterImage.getWidth() / characterImage.getHeight();
-        
+
         // Position character at the leftmost edge
         double characterY = gamePaneHeight * 0.80 - characterHeight; // Same level as structures
         characterImageView.setX(0); // Directly at the left edge
@@ -302,60 +301,81 @@ public class Environment {
 
     public Pane getProjectilePane(double currentSeconds) {
         // Define the size of the projectile
-        int projectileRadius = (int) (gamePaneHeight * 0.01);
+        int projectilePixelRadius = (int) (gamePaneHeight * 0.01);
 
         // Start with the structure (background, walls, etc.)
-        Pane projectilePane = getStructurePane();
+        Pane structurePane = getStructurePane();
 
         Projectile projectile = player.getProjectile();
 
-        double currentXLocation = projectile.calculateHorizontalPosition(currentSeconds);
-        double currentYLocation = projectile.calculateVerticalPosition(currentSeconds);
+        double projX_px = projectile.calculateHorizontalPosition(currentSeconds);
+        double projY_px = projectile.calculateVerticalPosition(currentSeconds);
+
+        // Calculate actual range in meters (horizontal distance from startX to currentX)
+        double startX_px = projectile.getStartX();
+        double actualRange_px = Math.abs(projX_px - startX_px);
+        double actualRange_m = actualRange_px / projectile.getNumberOfPixelsPerMeter();
 
         // Create the projectile circle at the starting position or current trajectory position
         Circle projectileCircle = new Circle(
-            currentXLocation, // Use calculated X position always
-            gamePaneHeight * 0.80 - currentYLocation, // Convert to screen coordinates
-            projectileRadius
+                projX_px, // Use calculated X position always
+                gamePaneHeight * 0.80 - projY_px, // Convert to screen coordinates
+                projectilePixelRadius
         );
 
         // Add the projectile to the pane
-        projectilePane.getChildren().add(projectileCircle);
+        structurePane.getChildren().add(projectileCircle);
         projectileCircle.setFill(Color.BLACK);
 
         // --- Polished HUD + Formula Overlay ---
-        double v       = projectile.calculateVelocity();
-        double vx      = projectile.calculateHorizontalVelocity();
-        double vy      = projectile.calculateVerticalVelocity(currentSeconds);
-        double t       = currentSeconds;
-        double θ       = Math.toRadians(projectile.getAngleInDegrees());
-        double initVy  = v * Math.sin(θ);
-        double range   = (v * v * Math.sin(2 * θ)) / 9.8;
+        double velocityX_px = projectile.calculateHorizontalVelocity();
+        double velocityY_px = projectile.calculateVerticalVelocity(currentSeconds);
+        double elapsedTime = currentSeconds;
+        double pxPerMeter = projectile.getNumberOfPixelsPerMeter();
+        double velocityX_m = velocityX_px / pxPerMeter;
+        double velocityY_m = velocityY_px / pxPerMeter;
+        double gravity_mps2 = 9.8;
+        double startY_px = projectile.getStartY();
+        double startY_m = startY_px / pxPerMeter;
 
         // Labels for Projectile Info
-        Label titleInfo = new Label("Projectile Info");
-        Label massL     = new Label("Mass: "      + projectile.getMass()  + " kg");
-        Label gravL     = new Label("Gravity: 9.8 m/s²");
-        Label vxL       = new Label(String.format("Vx: %.2f m/s", vx));
-        Label vyL       = new Label(String.format("Vy: %.2f m/s", vy));
-        Label timeL     = new Label(String.format("Time: %.2f s", t));
+        Label hudTitleLabel = new Label("Projectile Info");
+        Label massLabel = new Label("Mass: " + projectile.getMass() + " kg");
+        Label gravityLabel = new Label(String.format("Gravity: %.2f m/s²", gravity_mps2));
+        Label velocityXLabel = new Label(String.format("Vx: %.2f m/s", velocityX_m));
+        Label velocityYLabel = new Label(String.format("Vy: %.2f m/s", velocityY_m));
+        Label timeLabel = new Label(String.format("Time: %.2f s", elapsedTime));
+        Label startHeightLabel = new Label(String.format("Start Height: %.2f m", startY_m));
+        // Remove estimated range, replace actual range with just "Range"
+        Label rangeLabel = new Label(String.format("Range: %.2f m", actualRange_m));
 
         // Labels for Formula Sheet
-        Label titleF    = new Label("Formula Sheet");
-        Label eqL       = new Label(String.format("y(t) = y₀ + %.2f*t - 0.5*9.8*t²", initVy));
-        Label rangeL    = new Label(String.format("Range ≈ %.2f m", range));
+        Label formulaTitleLabel = new Label("Formula Sheet");
+        Label velocityEqLabel = new Label("v = F / m");
+        Label velocityXEqLabel = new Label("vₓ = v * cos(θ)");
+        Label velocityYEqLabel = new Label("vᵧ = v * sin(θ)");
+        Label xEqLabel = new Label("x(t) = x₀ + vₓ * t");
+        Label yEqLabel = new Label("y(t) = y₀ + vᵧ * t - 0.5 * g * t²");
+        // Use HBox to visually subscript 'final' in tfinal
+        Label rangeEqPrefixLabel = new Label("R = vₓ * t");
+        Label rangeEqSubLabel = new Label("final");
+        rangeEqSubLabel.setStyle("-fx-font-size: 10px; -fx-translate-y: 4;");
+        HBox rangeEqHBox = new HBox(0, rangeEqPrefixLabel, rangeEqSubLabel);
+        rangeEqHBox.setAlignment(Pos.BASELINE_LEFT);
 
         // Apply styles
         String titleStyle = "-fx-font-weight: bold; -fx-font-size: 20px; -fx-text-fill: #333;";
         String valueStyle = "-fx-font-size: 16px; -fx-text-fill: #222;";
-        titleInfo.setStyle(titleStyle); massL.setStyle(valueStyle);
-        gravL.setStyle(valueStyle);    vxL.setStyle(valueStyle);
-        vyL.setStyle(valueStyle);      timeL.setStyle(valueStyle);
-        titleF.setStyle(titleStyle);   eqL.setStyle(valueStyle);
-        rangeL.setStyle(valueStyle);
+        hudTitleLabel.setStyle(titleStyle); massLabel.setStyle(valueStyle);
+        gravityLabel.setStyle(valueStyle);  velocityXLabel.setStyle(valueStyle);
+        velocityYLabel.setStyle(valueStyle); timeLabel.setStyle(valueStyle);
+        startHeightLabel.setStyle(valueStyle); rangeLabel.setStyle(valueStyle);
+        formulaTitleLabel.setStyle(titleStyle);
+        velocityEqLabel.setStyle(valueStyle); velocityXEqLabel.setStyle(valueStyle); velocityYEqLabel.setStyle(valueStyle);
+        xEqLabel.setStyle(valueStyle); yEqLabel.setStyle(valueStyle); rangeEqPrefixLabel.setStyle(valueStyle);
 
         // Create two “cards”
-        VBox infoCard = new VBox(8, titleInfo, massL, gravL, vxL, vyL, timeL);
+        VBox infoCard = new VBox(8, hudTitleLabel, massLabel, gravityLabel, velocityXLabel, velocityYLabel, timeLabel, startHeightLabel, rangeLabel);
         infoCard.setAlignment(Pos.TOP_LEFT);
         infoCard.setStyle(
                 "-fx-background-color: rgba(200,230,255,0.9);" +
@@ -363,7 +383,7 @@ public class Environment {
                         "-fx-padding: 10px;"
         );
 
-        VBox formulaCard = new VBox(6, titleF, eqL, rangeL);
+        VBox formulaCard = new VBox(6, formulaTitleLabel, velocityEqLabel, velocityXEqLabel, velocityYEqLabel, xEqLabel, yEqLabel, rangeEqHBox);
         formulaCard.setAlignment(Pos.TOP_LEFT);
         formulaCard.setStyle(
                 "-fx-background-color: rgba(255,240,210,0.9);" +
@@ -375,15 +395,11 @@ public class Environment {
         VBox overlay = new VBox(12, infoCard, formulaCard);
         overlay.setAlignment(Pos.TOP_RIGHT);
         overlay.setLayoutX(gamePaneWidth - 250);  // tweak horizontally
-        overlay.setLayoutY(20);                   // tweak vertically
-
-        projectilePane.getChildren().add(overlay);
-
-
+        overlay.setLayoutY(30);                   // tweak vertically
+        structurePane.getChildren().add(overlay);
 
         // Display the getCurrentGameState info on the structure pane
-        int currentGameState = getCurrentGameState(currentSeconds);
-        switch (currentGameState) {
+        switch (this.currentGameState) {
             case 1:
                 // No collision detected, continue the game
                 break;
@@ -412,7 +428,7 @@ public class Environment {
                 break;
         }
 
-        return projectilePane;
+        return structurePane;
     }
 
     // Get current game state, return (1 = no collision, 2 = hit target, 3 = hit a hit target, 4 = hit target's wall, 5 = hit wall, 6 = Missed)
@@ -430,6 +446,7 @@ public class Environment {
             if (wall[i].contains(currentXLocation, correctedYLocation, (gamePaneHeight * 0.80), ballRadius)) {
                 System.out.println("Collided with wall " + i + "!");
                 soundEffects.playMissSound();
+                this.currentGameState = 5;
                 return 5;
             }
         }
@@ -440,7 +457,7 @@ public class Environment {
                 correctedYLocation > gamePaneHeight * 0.80) {
             System.out.println("Missed!");
             soundEffects.playMissSound();
-
+            this.currentGameState = 6;
             return 6;
         }
 
@@ -454,37 +471,31 @@ public class Environment {
 
                 // Check collision from above and ensure the projectile is moving downward
                 if (ballBottom >= targetTop && ballTop < targetTop && verticalVelocity < 0) {
-                    if (target[i].getIsHit()) {
-                        System.out.println("Hit Target " + i + " that was already hit!");
-                        soundEffects.playHitSound();
-
-                        return 3;
-                    } else {
+                    if (!target[i].getIsHit()) {
                         System.out.println("Hit Target " + i + "!");
-//                        target[i].setIsHit(true);
-//                        this.targetsLeft--; // update targetsLeft when a new target is hit
-//                        return 2;
                         target[i].setIsHit(true);
                         this.targetsLeft--;
                         soundEffects.playHitSound();
-
                         if (this.targetsLeft == 0) {
                             showScoreMenu(); // display score menu when all targets are hit
-
                         }
-                        soundEffects.playHitSound();
-
+                        this.currentGameState = 2;
                         return 2;
-
+                    } else {
+                        System.out.println("Hit Target " + i + " that was already hit!");
+                        this.currentGameState = 3;
+                        return 3;
                     }
                 } else {
                     System.out.println("Collided with Target " + i + "'s wall!");
                     soundEffects.playMissSound();
+                    this.currentGameState = 4;
                     return 4;
                 }
             }
         }
         // No collision
+        this.currentGameState = 1;
         return 1;
     }
 

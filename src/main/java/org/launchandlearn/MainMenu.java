@@ -25,7 +25,8 @@ public class MainMenu extends Application {
     private double width = Screen.getPrimary().getBounds().getWidth();
     private double height = Screen.getPrimary().getBounds().getHeight();
     private boolean isFullScreen = true;
-    private BackgroundMusic backgroundMusic;
+    private static BackgroundMusic backgroundMusic;
+    private int startLevel = 1;
 
     public void setWidth(double width) {
         this.width = width;
@@ -39,8 +40,15 @@ public class MainMenu extends Application {
         this.isFullScreen = fullScreen;
     }
 
+    public void setStartLevel(int level) {
+        this.startLevel = level;
+    }
+
     @Override
     public void start(Stage primaryStage) {
+        if (backgroundMusic != null) {
+            backgroundMusic.stop(); // Stop any previous music
+        }
         backgroundMusic = new BackgroundMusic();
         backgroundMusic.play();
 
@@ -64,6 +72,7 @@ public class MainMenu extends Application {
         startButton.setOnAction(event -> {
             GameApp gameApp = new GameApp();
             gameApp.setScreenDimensions(width, height, isFullScreen);
+            gameApp.setStartLevel(startLevel);
             try {
                 gameApp.start(primaryStage);
             } catch (Exception e) {
@@ -111,15 +120,20 @@ public class MainMenu extends Application {
             backgroundMusic.setVolume(newValue.doubleValue());
         });
 
-        Label iconLabel = new Label("Icon Volume");
-        Slider iconSlider = new Slider(0, 100, 50);
+        Label iconLabel = new Label("Sound Effects Volume");
+        Slider iconSlider = new Slider(0, 100, 100); // Default set to 100
+        // Set initial sound effect volume
+        SoundEffects.setVolume(iconSlider.getValue() / 100.0);
+        iconSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            SoundEffects.setVolume(newValue.doubleValue() / 100.0);
+        });
 
         Label resolutionLabel = new Label("Screen Resolution");
         ComboBox<String> resolutionBox = new ComboBox<>();
         resolutionBox.getItems().addAll("1080x720", "1280x720", "1920x1080", "2560x1440", "Full Screen");
         resolutionBox.setValue(getCurrentResolutionString());
 
-        // Optional: Adjust screen resolution when selected
+        // Adjust screen resolution when selected
         resolutionBox.setOnAction(e -> {
             String selected = resolutionBox.getValue();
             updateScreenDimensions(selected);

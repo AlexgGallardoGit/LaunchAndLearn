@@ -14,7 +14,9 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.scene.Group;
 
-
+/**
+ * Main application class for the game.
+ */
 public class GameApp extends Application {
     private Level level;
     private int numberOfTrys;
@@ -50,7 +52,7 @@ public class GameApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.stage = primaryStage;
-        
+
         // If dimensions haven't been set, get them from the stage or use defaults
         if (screenWidth == 0 || screenHeight == 0) {
             if (primaryStage.getWidth() > 0 && primaryStage.getHeight() > 0) {
@@ -63,7 +65,7 @@ public class GameApp extends Application {
                 this.isFullScreen = false;
             }
         }
-        
+
         // Apply dimensions to stage
         primaryStage.setWidth(screenWidth);
         primaryStage.setHeight(screenHeight);
@@ -76,7 +78,7 @@ public class GameApp extends Application {
         if (currentFrame != null) {
             currentFrame.getChildren().clear();
         }
-        
+
         level.setCurrentLevel(levelNumber);
         int numWalls = level.calculateNumberOfWalls();
         int numTargets = level.calculateNumberOfTargets();
@@ -92,7 +94,7 @@ public class GameApp extends Application {
         mass = Math.round(mass * 10) / 10.0;
 
         // Create projectile with initial position
-        Projectile initialProjectile = new Projectile(mass, 0, 0, 9.80, 0, 0, screenHeight);
+        Projectile initialProjectile = new Projectile(mass, 0, 0, 9.80, 0, 0, screenWidth);
         Player player = new Player(initialProjectile);
         environment.setPlayer(player);
 
@@ -112,24 +114,28 @@ public class GameApp extends Application {
             try {
                 double force = Double.parseDouble(forceInput.getText());
                 double angle = Double.parseDouble(angleInput.getText());
+                boolean valid = true;
+                if (force <= 0 || angle < 0 || angle > 90) {
+                    // Optionally show error elsewhere or ignore
+                    valid = false;
+                }
+                if (!valid) return;
                 initialProjectile.setForce(force);
                 initialProjectile.setAngleInDegrees(angle);
                 Player updatedPlayer = new Player(initialProjectile);
                 environment.setPlayer(updatedPlayer);
                 environment.incrementTries();
                 numberOfTrys = environment.getNumberOfTries();
-
                 environment.startGameLoop();
-
                 // Check if level is complete after each launch
                 if (environment.getTargetsLeft() == 0) {
                     showLevelComplete();
                 }
-
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input! Please enter numeric values.");
+                // Optionally show error elsewhere or ignore
             }
         });
+
         // Create an Hbox to hold the forceInput
         Label forceLabel = new Label("N");
         forceLabel.setFont(Font.font("Arial", 14));
@@ -148,6 +154,15 @@ public class GameApp extends Application {
         BorderPane bottomPane = new BorderPane();
         bottomPane.setCenter(inputBox);
         bottomPane.setStyle("-fx-padding: 15px;");
+        // --- Add Return to Main Menu Button ---
+        Button returnToMenuButton = new Button("Return to Main Menu");
+        returnToMenuButton.setStyle("-fx-font-size: 14px; -fx-padding: 5px 15px; -fx-background-color: #d9534f; -fx-text-fill: white;");
+        returnToMenuButton.setOnAction(e -> returnToMenu());
+
+        // Place button at bottom right
+        bottomPane.setRight(returnToMenuButton);
+        BorderPane.setAlignment(returnToMenuButton, Pos.BOTTOM_RIGHT);
+        // --- End Add ---
 
         // Draw initial state
         Pane staticFrame = environment.getProjectilePane(0);
@@ -179,7 +194,9 @@ public class GameApp extends Application {
 
     private void returnToMenu() {
         try {
+            // Save the current level before returning to the menu
             MainMenu menu = new MainMenu();
+            menu.setStartLevel(level.getCurrentLevel());
             menu.start(stage);
         } catch (Exception e) {
             e.printStackTrace();
