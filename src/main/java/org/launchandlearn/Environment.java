@@ -345,7 +345,6 @@ public class Environment {
         Label velocityXLabel = new Label(String.format("Vx: %.2f m/s", velocityX_m));
         Label velocityYLabel = new Label(String.format("Vy: %.2f m/s", velocityY_m));
         Label timeLabel = new Label(String.format("Time: %.2f s", elapsedTime));
-        Label startHeightLabel = new Label(String.format("Start Height: %.2f m", startY_m));
         // Remove estimated range, replace actual range with just "Range"
         Label rangeLabel = new Label(String.format("Range: %.2f m", actualRange_m));
 
@@ -369,13 +368,13 @@ public class Environment {
         hudTitleLabel.setStyle(titleStyle); massLabel.setStyle(valueStyle);
         gravityLabel.setStyle(valueStyle);  velocityXLabel.setStyle(valueStyle);
         velocityYLabel.setStyle(valueStyle); timeLabel.setStyle(valueStyle);
-        startHeightLabel.setStyle(valueStyle); rangeLabel.setStyle(valueStyle);
+        rangeLabel.setStyle(valueStyle);
         formulaTitleLabel.setStyle(titleStyle);
         velocityEqLabel.setStyle(valueStyle); velocityXEqLabel.setStyle(valueStyle); velocityYEqLabel.setStyle(valueStyle);
         xEqLabel.setStyle(valueStyle); yEqLabel.setStyle(valueStyle); rangeEqPrefixLabel.setStyle(valueStyle);
 
         // Create two “cards”
-        VBox infoCard = new VBox(8, hudTitleLabel, massLabel, gravityLabel, velocityXLabel, velocityYLabel, timeLabel, startHeightLabel, rangeLabel);
+        VBox infoCard = new VBox(8, hudTitleLabel, massLabel, gravityLabel, velocityXLabel, velocityYLabel, timeLabel, rangeLabel);
         infoCard.setAlignment(Pos.TOP_LEFT);
         infoCard.setStyle(
                 "-fx-background-color: rgba(200,230,255,0.9);" +
