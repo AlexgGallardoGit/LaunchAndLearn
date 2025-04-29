@@ -6,6 +6,7 @@ import java.net.URL;
 
 public class BackgroundMusic {
     private MediaPlayer mediaPlayer;
+    private static double currentVolume = 0.5;
 
     public BackgroundMusic() {
         try {
@@ -14,11 +15,10 @@ public class BackgroundMusic {
                 throw new RuntimeException("Audio file not found!");
             }
 
-
             Media media = new Media(mediaUrl.toString());
             mediaPlayer = new MediaPlayer(media);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop
-            mediaPlayer.setVolume(0.5); // Optional: adjust volume
+            mediaPlayer.setVolume(currentVolume); // Use static volume
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,5 +38,10 @@ public class BackgroundMusic {
 
     public void setVolume(double volume) {
         if (mediaPlayer != null) mediaPlayer.setVolume(volume);
+        currentVolume = volume;
+    }
+
+    public static double getCurrentVolume() {
+        return currentVolume;
     }
 }

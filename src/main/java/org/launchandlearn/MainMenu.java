@@ -115,7 +115,7 @@ public class MainMenu extends Application {
 
         // Settings menu controls
         Label musicLabel = new Label("Music Volume");
-        Slider musicSlider = new Slider(0, 1, 0.5);  
+        Slider musicSlider = new Slider(0, 1, BackgroundMusic.getCurrentVolume());  
         musicSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             backgroundMusic.setVolume(newValue.doubleValue());
         });
