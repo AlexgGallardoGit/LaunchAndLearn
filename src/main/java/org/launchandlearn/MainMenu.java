@@ -208,7 +208,7 @@ public class MainMenu extends Application {
 
                         // Create back button
                         Button backButton = new Button("Back");
-                        backButton.setStyle("-fx-font-size: 20px; -fx-background-color: white; -fx-text-fill: black; -fx-border-color: black;");
+                        backButton.setStyle("-fx-font-size: 18px; -fx-background-color: white; -fx-text-fill: black; -fx-border-color: black;");
                         backButton.setOnAction(ev -> root1.getChildren().remove(overlayPane)); // Remove overlay when back is clicked
 
                         // Position back button below the image to the right
