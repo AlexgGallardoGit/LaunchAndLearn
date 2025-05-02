@@ -188,6 +188,53 @@ public class MainMenu extends Application {
 
         root1.getChildren().add(exitButton);
 
+        // --- Instructions Button ---
+        Button instructionsButton = new Button("Instructions");
+        instructionsButton.setStyle("-fx-font-size: 18px; -fx-background-color: white; -fx-text-fill: black; -fx-border-color: black;");
+
+                instructionsButton.setOnAction(e -> {
+                    try {
+                        // Load the Instructions image
+                        Image instructionsImage = new Image(getClass().getResource("/images/Instructions.png").toExternalForm());
+                        ImageView instructionsImageView = new ImageView(instructionsImage);
+                        instructionsImageView.setPreserveRatio(true);
+                        instructionsImageView.setFitWidth(width * 0.6);  // Slightly smaller than full screen
+                        instructionsImageView.setFitHeight(height * 0.6);
+
+                        // Create a semi-transparent overlay pane
+                        StackPane overlayPane = new StackPane();
+                        overlayPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);"); // dark transparent background
+                        overlayPane.getChildren().add(instructionsImageView);
+
+                        // Create back button
+                        Button backButton = new Button("Back");
+                        backButton.setStyle("-fx-font-size: 20px; -fx-background-color: white; -fx-text-fill: black; -fx-border-color: black;");
+                        backButton.setOnAction(ev -> root1.getChildren().remove(overlayPane)); // Remove overlay when back is clicked
+
+                        // Position back button below the image to the right
+                        StackPane.setAlignment(backButton, Pos.BOTTOM_RIGHT);
+                        backButton.setTranslateX(-400);  // shift inward relative to image width
+                        backButton.setTranslateY(-100);  // place just below the image
+
+                        overlayPane.getChildren().add(backButton);
+
+                        // Add overlay on top of existing Main Menu
+                        root1.getChildren().add(overlayPane);
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+
+
+// Position instructions button bottom left
+        StackPane.setAlignment(instructionsButton, Pos.TOP_LEFT);
+        instructionsButton.setTranslateX(20);  // Padding from left
+        instructionsButton.setTranslateY(20); // Padding from bottom
+
+        root1.getChildren().add(instructionsButton);
+
+
         // Create scene and configure stage
         Scene scene1 = new Scene(root1);
         primaryStage.setScene(scene1);
