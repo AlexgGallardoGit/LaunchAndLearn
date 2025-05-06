@@ -146,14 +146,6 @@ public class MainMenu extends Application {
         });
 
         Button closeButton = new Button("Close Settings");
-        closeButton.setOnAction(e -> {
-            settingsMenu.setVisible(false);
-            for (Node node : root1.getChildren()) {
-                if (node != settingsMenu) {
-                    node.setEffect(null);
-                }
-            }
-        });
 
         settingsMenu.getChildren().addAll(
                 musicLabel, musicSlider,
@@ -165,16 +157,6 @@ public class MainMenu extends Application {
         // Add settings menu to root and center it
         root1.getChildren().add(settingsMenu);
         StackPane.setAlignment(settingsMenu, Pos.CENTER);
-
-        // Settings icon click handler
-        settingsCircle.setOnMouseClicked(event -> {
-            settingsMenu.setVisible(!settingsMenu.isVisible());
-            for (Node node : root1.getChildren()) {
-                if (node != settingsMenu) {
-                    node.setEffect(settingsMenu.isVisible() ? blur : null);
-                }
-            }
-        });
 
         // --- Exit Button ---
         Button exitButton = new Button("Exit");
@@ -192,42 +174,79 @@ public class MainMenu extends Application {
         Button instructionsButton = new Button("Instructions");
         instructionsButton.setStyle("-fx-font-size: 18px; -fx-background-color: white; -fx-text-fill: black; -fx-border-color: black;");
 
-                instructionsButton.setOnAction(e -> {
-                    try {
-                        // Load the Instructions image
-                        Image instructionsImage = new Image(getClass().getResource("/images/Instructions.png").toExternalForm());
-                        ImageView instructionsImageView = new ImageView(instructionsImage);
-                        instructionsImageView.setPreserveRatio(true);
-                        instructionsImageView.setFitWidth(width * 0.6);  // Slightly smaller than full screen
-                        instructionsImageView.setFitHeight(height * 0.6);
+        instructionsButton.setOnAction(e -> {
+            try {
+                // Load the Instructions image
+                Image instructionsImage = new Image(getClass().getResource("/images/Instructions.png").toExternalForm());
+                ImageView instructionsImageView = new ImageView(instructionsImage);
+                instructionsImageView.setPreserveRatio(true);
+                instructionsImageView.setFitWidth(width * 0.6);  // Slightly smaller than full screen
+                instructionsImageView.setFitHeight(height * 0.6);
 
-                        // Create a semi-transparent overlay pane
-                        StackPane overlayPane = new StackPane();
-                        overlayPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);"); // dark transparent background
-                        overlayPane.getChildren().add(instructionsImageView);
+                // Create a semi-transparent overlay pane
+                StackPane overlayPane = new StackPane();
+                overlayPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);"); // dark transparent background
+                overlayPane.getChildren().add(instructionsImageView);
 
-                        // Create back button
-                        Button backButton = new Button("Back");
-                        backButton.setStyle("-fx-font-size: 18px; -fx-background-color: white; -fx-text-fill: black; -fx-border-color: black;");
-                        backButton.setOnAction(ev -> root1.getChildren().remove(overlayPane)); // Remove overlay when back is clicked
+                // Create back button
+                Button backButton = new Button("Back");
+                backButton.setStyle("-fx-font-size: 18px; -fx-background-color: white; -fx-text-fill: black; -fx-border-color: black;");
+                backButton.setOnAction(ev -> root1.getChildren().remove(overlayPane)); // Remove overlay when back is clicked
 
-                        // Position back button below the image to the right
-                        StackPane.setAlignment(backButton, Pos.BOTTOM_RIGHT);
-                        backButton.setTranslateX(-400);  // shift inward relative to image width
-                        backButton.setTranslateY(-100);  // place just below the image
+                // Position back button below the image to the right
+                StackPane.setAlignment(backButton, Pos.BOTTOM_RIGHT);
+                backButton.setTranslateX(-400);  // shift inward relative to image width
+                backButton.setTranslateY(-100);  // place just below the image
 
-                        overlayPane.getChildren().add(backButton);
+                overlayPane.getChildren().add(backButton);
 
-                        // Add overlay on top of existing Main Menu
-                        root1.getChildren().add(overlayPane);
+                // Add overlay on top of existing Main Menu
+                root1.getChildren().add(overlayPane);
 
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        // Settings icon click handler
+        settingsCircle.setOnMouseClicked(event -> {
+            boolean becomingVisible = !settingsMenu.isVisible();
+            settingsMenu.setVisible(becomingVisible);
+
+            // Apply blur/remove blur AND disable/enable other controls
+            for (Node node : root1.getChildren()) {
+                // Apply effect/disable only to nodes *other* than the settings menu itself
+                if (node != settingsMenu) {
+                    node.setEffect(becomingVisible ? blur : null);
+
+                    // Disable buttons and the settings icon pane when menu is open
+                    // Enable them when menu is closed
+                    if (node == startButton || node == instructionsButton || node == exitButton || node == settingsPane) {
+                        node.setDisable(becomingVisible);
                     }
-                });
+                }
+            }
+            // Ensure the settings menu itself is never disabled by this logic
+            settingsMenu.setDisable(false);
+        });
+
+        // Close button click handler
+        closeButton.setOnAction(e -> {
+            settingsMenu.setVisible(false);
+            // Remove blur and re-enable buttons
+            for (Node node : root1.getChildren()) {
+                if (node != settingsMenu) { // Don't affect the settings menu itself
+                    node.setEffect(null);
+                    // Re-enable the specific buttons and the settings icon pane
+                    if (node == startButton || node == instructionsButton || node == exitButton || node == settingsPane) {
+                        node.setDisable(false);
+                    }
+                }
+            }
+        });
 
 
-// Position instructions button bottom left
+        // Position instructions button bottom left
         StackPane.setAlignment(instructionsButton, Pos.TOP_LEFT);
         instructionsButton.setTranslateX(20);  // Padding from left
         instructionsButton.setTranslateY(20); // Padding from bottom
