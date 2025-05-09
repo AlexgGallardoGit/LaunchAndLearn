@@ -44,7 +44,7 @@ public class Projectile {
     }
     public Projectile(double mass, double force, double angleInDegrees, double gravityConstant,
                       double startX, double startY, double gamePaneWidth) {
-        // Adjust scale dynamically (assuming original reference width is 720)
+        // Adjust scale dynamically (assuming original reference width is 1080)
         this.numberOfPixelsPerMeter = 120 * (gamePaneWidth / 1080);
 
         this.mass = mass;
