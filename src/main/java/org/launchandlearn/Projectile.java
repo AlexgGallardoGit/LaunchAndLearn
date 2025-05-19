@@ -7,8 +7,6 @@ public class Projectile {
     private double force;
     private double angleInRadians;
     private double angleInDegrees;
-    private double verticalVelocity;
-    private double horizontalVelocity;
     private double gravityConstant;
     private double startX;
     private double startY;
@@ -160,7 +158,6 @@ public class Projectile {
     public double calculateHorizontalVelocity() {
         // Calculate the horizontal velocity based on Vx = velocity * cos(angleInRadians)
         double horizontalVelocity = calculateVelocity() * Math.cos(angleInRadians);
-        this.horizontalVelocity = horizontalVelocity;
         return horizontalVelocity;
     }
     public double calculateVerticalVelocity(double seconds) {
@@ -168,7 +165,6 @@ public class Projectile {
         double initialVerticalVelocity = calculateVelocity() * Math.sin(angleInRadians);
         // Calculate the vertical velocity at the desired seconds
         double verticalVelocity = initialVerticalVelocity + getVerticalAccelerationInPixels() * seconds;
-        this.verticalVelocity = verticalVelocity;
         return verticalVelocity;
     }
 
